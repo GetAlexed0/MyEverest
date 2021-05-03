@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "593630907938",
+    "project_id": "myeverest-8895f",
+    "storage_bucket": "myeverest-8895f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:593630907938:android:9fbe730f5175ab76a1447b",
+        "android_client_info": {
+          "package_name": "com.example.myeverest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "593630907938-ibgbk9egltf33a5vpi02455jh7v65g6c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHbyQo-_i7omNL11TycfrPd4dbBM00H3g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "593630907938-ibgbk9egltf33a5vpi02455jh7v65g6c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
