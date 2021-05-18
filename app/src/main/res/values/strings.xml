@@ -20,6 +20,6 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="menu_profile">Profile</string>
-    <string name="menu_logout">logout</string>
+    <string name="menu_logout">Logout</string>
     <string name="menu_staylogged">Stay logged</string>
 </resources>
