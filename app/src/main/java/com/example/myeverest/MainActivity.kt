@@ -5,6 +5,9 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.Menu
+import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -16,13 +19,17 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 
 class MainActivity : AppCompatActivity() {
 
+    val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val fuser: FirebaseUser = firebaseAuth.currentUser
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -31,6 +38,19 @@ class MainActivity : AppCompatActivity() {
         val fab: FloatingActionButton = findViewById(R.id.fab)
         fab.setOnClickListener { (switchActivities())
         }
+
+        val logout: Button = findViewById(R.id.logout_btn)
+        logout.setOnClickListener(View.OnClickListener {
+            firebaseAuth.signOut()
+            startActivity(Intent(this, Login::class.java))
+        })
+
+        val confirmedMailText: TextView = findViewById(R.id.emailconfirmed)
+
+        if(firebaseAuth.currentUser.isEmailVerified) {
+           confirmedMailText.setText("Email bestätigt")
+        }
+
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)

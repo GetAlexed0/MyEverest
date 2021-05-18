@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,11 +16,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Register extends AppCompatActivity {
 
@@ -27,6 +36,9 @@ public class Register extends AppCompatActivity {
     Button mRegisterBtn;
     FirebaseAuth fAuth;
     ProgressBar mProgressBar;
+    TextView mLoginText;
+    FirebaseFirestore firestore;
+    String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +49,7 @@ public class Register extends AppCompatActivity {
         mEMail = findViewById(R.id.reg_mail);
         mPassword = findViewById(R.id.reg_password);
         mRegisterBtn = findViewById(R.id.registerBtn);
+        mLoginText = findViewById(R.id.loginText);
 
         mProgressBar = findViewById(R.id.progressBar);
         fAuth = FirebaseAuth.getInstance();
@@ -45,6 +58,13 @@ public class Register extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
             finish();
         }
+
+        mLoginText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), Login.class));
+            }
+        });
 
         mRegisterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +99,29 @@ public class Register extends AppCompatActivity {
 
                 fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                     if(task.isSuccessful()) {
+
+                        //EMail bestätigungslink versenden
+
+                        FirebaseUser fUser = fAuth.getCurrentUser();
+                        fUser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Toast.makeText(Register.this, "Bestätigungslink wurde verschickt", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull @NotNull Exception e) {
+                                Toast.makeText(Register.this, "Fehler. mail nicht verschickt" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
                         Toast.makeText(Register.this, "User erstellt", Toast.LENGTH_LONG).show();
+                        userID = fAuth.getCurrentUser().getUid();
+                        DocumentReference documentReference = firestore.collection("users").document(userID);
+                        Map<String, Object> user = new HashMap<>();
+                        user.put("username", name);
+                        user.put("email", email);
+                        documentReference.set(user);
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     }
 
