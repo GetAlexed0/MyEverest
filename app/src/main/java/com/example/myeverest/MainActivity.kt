@@ -11,7 +11,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.myeverest.ui.login.LoginActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
@@ -53,7 +52,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun switchActivities() {
-        val switchActivityIntent = Intent(this, LoginActivity::class.java)
+        val switchActivityIntent = Intent(this, Register::class.java)
         startActivity(switchActivityIntent)
     }
 }
