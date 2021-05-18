@@ -1,6 +1,8 @@
 package com.example.myeverest
 
+import android.content.ClipData
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
