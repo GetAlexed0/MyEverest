@@ -1,13 +1,14 @@
 package com.example.myeverest
 
-import android.content.ClipData
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -18,18 +19,22 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class MainActivity : AppCompatActivity() {
 
     val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val fuser: FirebaseUser = firebaseAuth.currentUser
+        if(firebaseAuth.currentUser != null) {
+            val fuser: FirebaseUser = firebaseAuth.currentUser
+            fuser.reload()
+        }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -45,9 +50,15 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, Login::class.java))
         })
 
+        val testbtn: Button = findViewById(R.id.test_btn)
+
+        testbtn.setOnClickListener(View.OnClickListener {
+            val switchActivityIntent = Intent(this, Userprofile::class.java)
+            startActivity(switchActivityIntent)
+        })
         val confirmedMailText: TextView = findViewById(R.id.emailconfirmed)
 
-        if(firebaseAuth.currentUser.isEmailVerified) {
+        if(firebaseAuth.currentUser != null && firebaseAuth.currentUser.isEmailVerified) {
            confirmedMailText.setText("Email bestätigt")
         }
 
