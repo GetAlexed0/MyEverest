@@ -22,26 +22,5 @@
     <string name="menu_profile">Profile</string>
     <string name="menu_logout">Logout</string>
     <string name="menu_staylogged">Stay logged</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="name_large">Name</string>
-    <string name="user_name">Benutzername</string>
-    <string name="birthdate">Geburtsdatum</string>
-    <string name="mail_hint">E-Mail</string>
-    <string name="mail">E-Mail</string>
-    <string name="address">Adresse</string>
-    <string name="name_hint">Name</string>
-    <string name="birthdate_hint">Geburtsdatum</string>
-    <string name="address_hint">Adresse</string>
-    <string name="title_activity_friends">Friends</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
-
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <string name="challenge">Challenge</string>
-    <string name="challenge_place">Ort: lolloallaao\nlalsaslsala\n</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

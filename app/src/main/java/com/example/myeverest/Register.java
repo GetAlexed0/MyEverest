@@ -52,6 +52,7 @@ public class Register extends AppCompatActivity {
         mLoginText = findViewById(R.id.loginText);
 
         mProgressBar = findViewById(R.id.progressBar);
+        firestore = FirebaseFirestore.getInstance();
         fAuth = FirebaseAuth.getInstance();
 
         if(fAuth.getCurrentUser() != null) {
@@ -106,6 +107,7 @@ public class Register extends AppCompatActivity {
                         fUser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void unused) {
+                                System.out.println("Hallo?");
                                 Toast.makeText(Register.this, "Bestätigungslink wurde verschickt", Toast.LENGTH_SHORT).show();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
@@ -117,7 +119,7 @@ public class Register extends AppCompatActivity {
 
                         Toast.makeText(Register.this, "User erstellt", Toast.LENGTH_LONG).show();
                         userID = fAuth.getCurrentUser().getUid();
-                        DocumentReference documentReference = firestore.collection("users").document(userID);
+                        DocumentReference documentReference = firestore.collection("users").document(email);
                         Map<String, Object> user = new HashMap<>();
                         user.put("username", name);
                         user.put("email", email);
