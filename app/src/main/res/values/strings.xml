@@ -23,4 +23,5 @@
     <string name="menu_logout">Logout</string>
     <string name="menu_staylogged">Stay logged</string>
     <string name="title_activity_maps">Map</string>
+    <string name="user_name">Username</string>
 </resources>

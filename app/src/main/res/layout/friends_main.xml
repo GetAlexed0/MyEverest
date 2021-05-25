@@ -39,7 +39,8 @@
         app:layout_constraintHorizontal_bias="0.946"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.145"
+        app:layout_constraintVertical_bias="0.24000001"
+        app:srcCompat="@drawable/mountains_background"
         tools:srcCompat="@tools:sample/avatars" />
 
     <ProgressBar
