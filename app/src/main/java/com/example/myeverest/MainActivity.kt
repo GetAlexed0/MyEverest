@@ -50,6 +50,12 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, Login::class.java))
         })
 
+        val mapsButton: Button = findViewById(R.id.maps_btn)
+        mapsButton.setOnClickListener(View.OnClickListener {
+            val switchActivityIntent = Intent(this, MapsActivity::class.java)
+            startActivity(switchActivityIntent)
+        })
+
         val testbtn: Button = findViewById(R.id.test_btn)
 
         testbtn.setOnClickListener(View.OnClickListener {
