@@ -3,8 +3,11 @@ package com.example.myeverest;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.hardware.Sensor;
@@ -42,15 +45,25 @@ public class Userprofile extends AppCompatActivity implements SensorEventListene
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     DocumentReference userDoc = firestore.collection("users").document(currentUser.getEmail());
+    DocumentReference testDoc = firestore.collection("challenges").document("iSTHVu0FKJiIhJ9dd447");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_userprofile);
+
+        if(ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_DENIED && Build.VERSION.SDK_INT >= 23){
+            //ask for permission
+            requestPermissions(new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, 19);
+        }
+
+
         sManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         stepText = findViewById(R.id.stepcounter);
         stepBar = findViewById(R.id.stepBar);
         stepBar.setIndeterminate(false);
+        stepBar.setSecondaryProgress(100);
 
         stepButton = findViewById(R.id.step_btn);
         stepButton.setOnClickListener(new View.OnClickListener() {
@@ -69,7 +82,7 @@ public class Userprofile extends AppCompatActivity implements SensorEventListene
             public void onClick(View v) {
                 steps = 0;
                 stepText.setText("Schritte: " + steps);
-                stepBar.setProgress((int) steps, true);
+                stepBar.setProgress((int) steps, false);
             }
         });
 

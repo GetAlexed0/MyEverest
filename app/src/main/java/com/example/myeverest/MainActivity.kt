@@ -2,13 +2,10 @@ package com.example.myeverest
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -17,17 +14,18 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.myeverest.challenges.MapsActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 
-
 class MainActivity : AppCompatActivity() {
 
     val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,7 +61,9 @@ class MainActivity : AppCompatActivity() {
             startActivity(switchActivityIntent)
         })
         val confirmedMailText: TextView = findViewById(R.id.emailconfirmed)
-
+        if(firebaseAuth.currentUser != null) {
+            firebaseAuth.currentUser.reload();
+        }
         if(firebaseAuth.currentUser != null && firebaseAuth.currentUser.isEmailVerified) {
            confirmedMailText.setText("Email bestätigt")
         }
@@ -85,6 +85,13 @@ class MainActivity : AppCompatActivity() {
             val switchActivityIntent = Intent(this, MainActivity2::class.java)
             startActivity(switchActivityIntent)
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(firebaseAuth.currentUser != null) {
+            firebaseAuth.currentUser.reload();
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
