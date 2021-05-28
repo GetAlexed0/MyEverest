@@ -15,6 +15,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.myeverest.challenges.MapsActivity
+import com.example.myeverest.challenges.WalkingChallenge
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -82,7 +83,7 @@ class MainActivity : AppCompatActivity() {
         val friendsButton: Button = findViewById(R.id.friends_btn)
 
         friendsButton.setOnClickListener(View.OnClickListener {
-            val switchActivityIntent = Intent(this, MainActivity2::class.java)
+            val switchActivityIntent = Intent(this, WalkingChallenge::class.java)
             startActivity(switchActivityIntent)
         })
     }
