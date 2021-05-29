@@ -59,10 +59,7 @@ public class Account extends AppCompatActivity {
 
         mChangeButton = findViewById(R.id.setUserAttributes_btn);
 
-        vorname = mPrename.getText().toString().trim();
-        nachname = mSurname.getText().toString().trim();
-        adresse = mAddress.getText().toString().trim();
-        geburtsdatum = mBirthdate.getText().toString().trim();
+
 
         mChangeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,6 +71,12 @@ public class Account extends AppCompatActivity {
     }
 
     public void changeData() {
+
+
+        vorname = mPrename.getText().toString().trim();
+        nachname = mSurname.getText().toString().trim();
+        adresse = mAddress.getText().toString().trim();
+        geburtsdatum = mBirthdate.getText().toString().trim();
 
         DocumentReference docRef = firestore.collection("users").document(fAuth.getCurrentUser().getEmail());
         docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
