@@ -66,28 +66,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/nav_host_fragment" />
 
-    <EditText
-        android:id="@+id/editTextTextMultiLine"
-        android:layout_width="230dp"
-        android:layout_height="169dp"
-        android:ems="10"
-        android:gravity="start|top"
-        android:inputType="textMultiLine"
-        android:text="Test123"
-        tools:layout_editor_absoluteX="150dp"
-        tools:layout_editor_absoluteY="150dp" />
-
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/mapView"
-        android:layout_width="115dp"
-        android:layout_height="94dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.118"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/nav_host_fragment"
-        app:layout_constraintVertical_bias="0.883" />
-
     <Button
         android:id="@+id/friends_btn"
         android:layout_width="wrap_content"
