@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
         val friendsButton: Button = findViewById(R.id.friends_btn)
 
         friendsButton.setOnClickListener(View.OnClickListener {
-            val switchActivityIntent = Intent(this, WalkingChallenge::class.java)
+            val switchActivityIntent = Intent(this, Account::class.java)
             startActivity(switchActivityIntent)
         })
     }

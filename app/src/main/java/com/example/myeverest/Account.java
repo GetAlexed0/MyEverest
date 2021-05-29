@@ -57,16 +57,25 @@ public class Account extends AppCompatActivity {
         mAddress = findViewById(R.id.editTextTextPostalAddress);
         mBirthdate = findViewById(R.id.editTextDate);
 
+        mChangeButton = findViewById(R.id.setUserAttributes_btn);
+
         vorname = mPrename.getText().toString().trim();
         nachname = mSurname.getText().toString().trim();
         adresse = mAddress.getText().toString().trim();
         geburtsdatum = mBirthdate.getText().toString().trim();
 
+        mChangeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeData();
+            }
+        });
+
     }
 
     public void changeData() {
 
-        DocumentReference docRef = firestore.collection("users").document("email");
+        DocumentReference docRef = firestore.collection("users").document(fAuth.getCurrentUser().getEmail());
         docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable @org.jetbrains.annotations.Nullable DocumentSnapshot snapshot,
