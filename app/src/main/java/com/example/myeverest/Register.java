@@ -32,7 +32,7 @@ import java.util.Map;
 
 public class Register extends AppCompatActivity {
 
-    EditText mFullName, mEMail, mPassword;
+    EditText mFullName, mEMail, mPassword, mPrename, mSurname;
     Button mRegisterBtn;
     FirebaseAuth fAuth;
     ProgressBar mProgressBar;
@@ -50,6 +50,8 @@ public class Register extends AppCompatActivity {
         mPassword = findViewById(R.id.reg_password);
         mRegisterBtn = findViewById(R.id.registerBtn);
         mLoginText = findViewById(R.id.loginText);
+        mPrename = findViewById(R.id.editTextPrename);
+        mSurname = findViewById(R.id.editTextSurname);
 
         mProgressBar = findViewById(R.id.progressBar);
         firestore = FirebaseFirestore.getInstance();
@@ -73,6 +75,8 @@ public class Register extends AppCompatActivity {
                 String email = mEMail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
                 String name = mFullName.getText().toString().trim();
+                String vorname = mPrename.getText().toString().trim();
+                String nachname = mSurname.getText().toString().trim();
 
                 if(TextUtils.isEmpty(email)) {
                     mEMail.setError("Keine Mail angegeben");
@@ -86,6 +90,16 @@ public class Register extends AppCompatActivity {
 
                 if(TextUtils.isEmpty(password)) {
                     mPassword.setError("Kein Passwort angegeben");
+                    return;
+                }
+
+                if(TextUtils.isEmpty(vorname)) {
+                    mPrename.setError("Kein Vorname angegeben");
+                    return;
+                }
+
+                if(TextUtils.isEmpty(nachname)) {
+                    mSurname.setError("Kein Nachname angegeben");
                     return;
                 }
 
@@ -123,6 +137,8 @@ public class Register extends AppCompatActivity {
                         Map<String, Object> user = new HashMap<>();
                         user.put("username", name);
                         user.put("email", email);
+                        user.put("vorname", vorname);
+                        user.put("nachname", nachname);
                         documentReference.set(user);
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     }
