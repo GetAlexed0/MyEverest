@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/challenge_page"
+        android:enabled="true"
+        android:icon="@drawable/ic__520590201596026797"
+        android:title="@string/challenges"/>
+    <item
+        android:id="@+id/user_page"
+        android:enabled="true"
+        android:icon="@drawable/ic_baseline_account_circle_24"
+        android:title="@string/profil" />
+    <item
+        android:id="@+id/map_page"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_dialog_map"
+        android:title="@string/karte" />
+    <item
+        android:id="@+id/friends_page"
+        android:enabled="true"
+        android:icon="@drawable/ic__0117386491556281663"
+        android:title="@string/sozial" ></item>
+</menu>

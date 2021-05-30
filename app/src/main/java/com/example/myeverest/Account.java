@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Account extends AppCompatActivity {
+public class Account extends Fragment {
 
     EditText mPrename, mAddress, mBirthdate, mSurname;
     Button mChangeButton;
@@ -43,22 +44,28 @@ public class Account extends AppCompatActivity {
     String adresse;
     String geburtsdatum;
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_account, container, false);
+    }
+
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_account);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        View v = getView();
 
         firestore = FirebaseFirestore.getInstance();
         fAuth = FirebaseAuth.getInstance();
 
-        mPrename = findViewById(R.id.editTextPrename2);
-        mSurname = findViewById(R.id.editTextSurname2);
-        mAddress = findViewById(R.id.editTextTextPostalAddress);
-        mBirthdate = findViewById(R.id.editTextDate);
+        mPrename = v.findViewById(R.id.editTextPrename2);
+        mSurname = v.findViewById(R.id.editTextSurname2);
+        mAddress = v.findViewById(R.id.editTextTextPostalAddress);
+        mBirthdate = v.findViewById(R.id.editTextDate);
 
-        mChangeButton = findViewById(R.id.setUserAttributes_btn);
-
+        mChangeButton = v.findViewById(R.id.setUserAttributes_btn);
 
 
         mChangeButton.setOnClickListener(new View.OnClickListener() {
@@ -67,7 +74,6 @@ public class Account extends AppCompatActivity {
                 changeData();
             }
         });
-
     }
 
     public void changeData() {

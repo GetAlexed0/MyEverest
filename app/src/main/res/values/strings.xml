@@ -27,4 +27,11 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="erstellen">Erstellen</string>
+    <string name="challenges">Challenges</string>
+    <string name="user">User</string>
+    <string name="challengegram">Challengegram</string>
+    <string name="karte">Karte</string>
+    <string name="profil">Profil</string>
+    <string name="freunde">Freunde</string>
+    <string name="sozial">Sozial</string>
 </resources>

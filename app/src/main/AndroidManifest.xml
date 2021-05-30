@@ -21,8 +21,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyEverest">
         <activity android:name=".challenges.WalkingChallenge"></activity>
-        <activity android:name=".challenges.MapsActivity" />
-        <activity android:name=".MainActivity2" />
         <activity android:name=".Account" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

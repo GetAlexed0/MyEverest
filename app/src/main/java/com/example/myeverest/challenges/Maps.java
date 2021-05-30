@@ -1,50 +1,36 @@
 package com.example.myeverest.challenges;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-
-
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.location.Address;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.example.myeverest.JavaTesting.DBtests;
 import com.example.myeverest.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class Maps extends Fragment implements OnMapReadyCallback {
 
     private FusedLocationProviderClient fusedLocationClient;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
@@ -55,15 +41,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private static Location lastknown;
 
+    public Maps() {
+        // Required empty public constructor
+    }
+
     public static Location getLastknown() {
         return lastknown;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
-        coordLong = findViewById(R.id.coordText);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_map, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        View v = getView();
+
+        coordLong = v.findViewById(R.id.coordText);
         getLastKnownLocation();
         MapsFragment.setLocation(getLastKnownLocation());
 
@@ -76,9 +74,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         coordLong.setText(String.valueOf(lastknown.getLatitude() + " : " + lastknown.getLongitude()));
         //Mapfragment initialisieren
         Fragment fragment = new MapsFragment();
-        setButton = findViewById(R.id.setLocation_btn);
-        showButton = findViewById(R.id.showLocation_btn);
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        setButton = v.findViewById(R.id.setLocation_btn);
+        showButton = v.findViewById(R.id.showLocation_btn);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         setButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,28 +93,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         showButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DBtests.testfun();
+
             }
         });
         //Fragment öffnen
-        getSupportFragmentManager().beginTransaction()
+        getFragmentManager().beginTransaction()
                 .replace(R.id.frame_layout, fragment).commit();
 
-    }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        gMap = googleMap;
-        position = new LatLng(lastknown.getLatitude(), lastknown.getLongitude());
-        gMap.addMarker(new MarkerOptions()
-                .position(position)
-        .title("Aktueller Standort"));
-        gMap.moveCamera(CameraUpdateFactory.newLatLng(position));
+
+
     }
 
     private Location getLastKnownLocation() {
         if ( Build.VERSION.SDK_INT >= 23){
-            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) !=
+            if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) !=
                     PackageManager.PERMISSION_GRANTED  ){
                 requestPermissions(new String[]{
                                 android.Manifest.permission.ACCESS_FINE_LOCATION},
@@ -125,12 +116,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         }
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             System.out.println("Permissions fehlen");
 
             return null;
         }
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         List<String> providers = locationManager.getProviders(true);
         Location bestLocation = null;
         for (String provider : providers) {
@@ -147,5 +138,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return bestLocation;
     }
 
-
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        gMap = googleMap;
+        position = new LatLng(lastknown.getLatitude(), lastknown.getLongitude());
+        gMap.addMarker(new MarkerOptions()
+                .position(position)
+                .title("Aktueller Standort"));
+        gMap.moveCamera(CameraUpdateFactory.newLatLng(position));
+    }
 }

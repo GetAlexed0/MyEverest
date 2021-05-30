@@ -1,14 +1,9 @@
 package com.example.myeverest.challenges;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -23,9 +18,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.util.List;
-import java.util.Map;
 
 public class MapsFragment extends Fragment {
     static MarkerOptions options;
@@ -86,7 +78,7 @@ public class MapsFragment extends Fragment {
 
                     }
                 });
-                LatLng home = new LatLng(MapsActivity.getLastknown().getLatitude(), MapsActivity.getLastknown().getLongitude());
+                LatLng home = new LatLng(Maps.getLastknown().getLatitude(), Maps.getLastknown().getLongitude());
                 googleMap.addMarker(new MarkerOptions()
                         .position(home)
                         .title("Mein Zuhause"));
