@@ -23,7 +23,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.example.myeverest.JavaTesting.DBtests;
+
 import com.example.myeverest.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -95,7 +95,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         showButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DBtests.testfun();
             }
         });
         //Fragment öffnen
