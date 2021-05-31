@@ -23,6 +23,7 @@ public class ChallengeCreator extends Fragment {
     Button button;
     Slider seekBar;
     Bundle arguments;
+    String type;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,15 +37,15 @@ public class ChallengeCreator extends Fragment {
         super.onActivityCreated(savedInstanceState);
         View v = getView();
 
-        text = v.findViewById(R.id.stepcounter_textview);
+        text = v.findViewById(R.id.step_text);
         button = v.findViewById(R.id.create_walking_btn);
         seekBar = v.findViewById(R.id.steps_seekBar);
 
         text.setText(String.valueOf(seekBar.getValue()));
 
         arguments = getArguments();
-        String test = arguments.getString("type");
-        text.setText(test);
+        type = arguments.getString("type");
+        text.setText(type);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override

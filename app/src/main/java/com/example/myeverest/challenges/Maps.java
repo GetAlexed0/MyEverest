@@ -26,6 +26,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
@@ -35,7 +37,7 @@ public class Maps extends Fragment implements OnMapReadyCallback {
     private FusedLocationProviderClient fusedLocationClient;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     Button setButton, showButton;
-    TextView coordLong, coordLat;
+    TextInputEditText coordLong;
     GoogleMap gMap;
     LatLng position;
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -61,7 +63,7 @@ public class Maps extends Fragment implements OnMapReadyCallback {
         super.onActivityCreated(savedInstanceState);
         View v = getView();
 
-        coordLong = v.findViewById(R.id.coordText);
+        coordLong = v.findViewById(R.id.inputCoordinates);
         getLastKnownLocation();
         MapsFragment.setLocation(getLastKnownLocation());
 

@@ -74,7 +74,7 @@
         android:id="@+id/loginText"
         android:layout_width="284dp"
         android:layout_height="17dp"
-        android:text="Account schon vorhanden? Hier Einloggen!"
+        android:text="@string/account_schon_vorhanden_hier_einloggen"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
