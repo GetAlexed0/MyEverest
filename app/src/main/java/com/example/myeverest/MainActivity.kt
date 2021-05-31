@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.widget.TextView
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -18,18 +20,24 @@ class MainActivity : AppCompatActivity() {
 
     val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    lateinit var mailConfirmed: TextView;
 
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        mailConfirmed = findViewById(R.id.emailconfirmed)
         if(firebaseAuth.currentUser != null) {
             val fuser: FirebaseUser = firebaseAuth.currentUser
             fuser.reload()
+            if(fuser.isEmailVerified) {
+                mailConfirmed.setText("Email bestätigt")
+            }
         }
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
 
@@ -63,6 +71,10 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         if(firebaseAuth.currentUser != null) {
             firebaseAuth.currentUser.reload();
+            if(firebaseAuth.currentUser.isEmailVerified) {
+                mailConfirmed.setText("Email bestätigt")
+            }
+
         }
     }
 

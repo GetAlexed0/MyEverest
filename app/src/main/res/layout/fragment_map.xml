@@ -6,18 +6,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".challenges.Maps">
 
+
     <FrameLayout
         android:id="@+id/frame_layout"
         android:layout_width="match_parent"
         android:layout_height="400dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.22000003" />
-
-
+        app:layout_constraintVertical_bias="0.114" />
 
     <EditText
         android:id="@+id/coordLat"
@@ -78,7 +77,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:ellipsize="start"
-            android:gravity="center_horizontal" />
+            android:gravity="center_horizontal"
+            android:focusable="false"/>
     </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

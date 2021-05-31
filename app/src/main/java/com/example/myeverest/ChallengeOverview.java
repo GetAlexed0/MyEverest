@@ -34,7 +34,6 @@ public class ChallengeOverview extends Fragment {
         View v = getView();
 
         createButton = v.findViewById(R.id.floatingActionButton);
-
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

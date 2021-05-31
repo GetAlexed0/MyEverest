@@ -18,19 +18,20 @@
         app:layout_constraintVertical_bias="0.87" />
 
 
-
     <com.google.android.material.slider.Slider
         android:id="@+id/steps_seekBar"
         android:layout_width="260dp"
         android:layout_height="56dp"
         android:stepSize="1000.0"
+        android:value="6000"
         android:valueFrom="0.0"
         android:valueTo="20000.0"
-        android:value="6000"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.78" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textField"
@@ -48,6 +49,7 @@
 
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/points_input"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:inputType="numberDecimal"
@@ -58,45 +60,34 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textField2"
+        android:id="@+id/description_textfield"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:hint="Punktzahl"
         android:ellipsize="start"
         android:gravity="center_horizontal"
+        android:hint="Beschreibung"
+        app:counterEnabled="true"
+        app:counterMaxLength="100"
+        app:helperText="Maximale Zeichen:"
+        app:helperTextEnabled="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.15999997"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        app:helperTextEnabled="true"
-        app:helperText="Maximale Zeichen:"
-        app:counterEnabled="true"
-        app:counterMaxLength="100"
-        >
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/description_input"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inputType="textMultiLine"
+            android:layout_height="71dp"
             android:autoSizeTextType="uniform"
             android:ellipsize="start"
-            android:gravity="center_horizontal"/>
+            android:gravity="center_horizontal"
+            android:inputType="textMultiLine" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:id="@+id/step_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.76" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

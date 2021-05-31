@@ -11,6 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/addsymbol"
+        android:backgroundTint="?attr/colorPrimary"
         android:clickable="true"
         android:focusable="true"
         android:contentDescription="@string/create_challenge_button"

@@ -2,8 +2,10 @@ package com.example.myeverest.challenges;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import android.media.MediaCodec;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,17 +15,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myeverest.R;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.slider.Slider;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.jetbrains.annotations.NotNull;
 
 public class ChallengeCreator extends Fragment {
 
-    TextView text;
+    TextView text, descriptionInput, pointInput;
     Button button;
     Slider seekBar;
     Bundle arguments;
     String type;
+    FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,41 +45,39 @@ public class ChallengeCreator extends Fragment {
         super.onActivityCreated(savedInstanceState);
         View v = getView();
 
-        text = v.findViewById(R.id.step_text);
+        descriptionInput = v.findViewById(R.id.description_input);
+        pointInput = v.findViewById(R.id.points_input);
+
+
         button = v.findViewById(R.id.create_walking_btn);
         seekBar = v.findViewById(R.id.steps_seekBar);
 
-        text.setText(String.valueOf(seekBar.getValue()));
-
         arguments = getArguments();
         type = arguments.getString("type");
-        text.setText(type);
+
+        if(type == "WALK")
+        {
+            seekBar.setVisibility(View.VISIBLE);
+        }
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(), text.getText(), Toast.LENGTH_SHORT).show();
+                DocumentReference metadata = firestore.collection("challenges").document();
+                metadata.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        //TODO
+                    }
+                });
+
             }
         });
-
-        /*seekBar.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
-            @Override
-            public void onStartTrackingTouch(@NonNull @NotNull Slider slider) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(@NonNull @NotNull Slider slider) {
-                text.setText(String.valueOf(seekBar.getValue()));
-            }
-
-            @Override
-            public void on
-        });*/
 
         seekBar.addOnChangeListener(new Slider.OnChangeListener() {
             @Override
             public void onValueChange(@NonNull @NotNull Slider slider, float value, boolean fromUser) {
-                text.setText(String.valueOf(seekBar.getValue()));
+                //text.setText(String.valueOf(seekBar.getValue()));
             }
         });
     }

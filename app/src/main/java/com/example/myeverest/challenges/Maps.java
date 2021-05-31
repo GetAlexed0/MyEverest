@@ -30,6 +30,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class Maps extends Fragment implements OnMapReadyCallback {
@@ -69,8 +70,8 @@ public class Maps extends Fragment implements OnMapReadyCallback {
 
         if(lastknown == null) {
             lastknown = new Location("");
-            lastknown.setLatitude(49.47438163723466);
-            lastknown.setLongitude(8.534547877930759);
+            lastknown.setLatitude(49.4743816);
+            lastknown.setLongitude(8.5345478);
         }
 
         coordLong.setText(String.valueOf(lastknown.getLatitude() + " : " + lastknown.getLongitude()));
@@ -88,7 +89,7 @@ public class Maps extends Fragment implements OnMapReadyCallback {
                     lastknown.setLongitude(marker.getPosition().longitude);
                     lastknown.setLatitude(marker.getPosition().latitude);
                 }
-                coordLong.setText(String.valueOf(lastknown.getLatitude()) + " : " + String.valueOf(lastknown.getLongitude()));
+                coordLong.setText(String.valueOf(round(lastknown.getLatitude(), 12)) + " : " + String.valueOf(round(lastknown.getLongitude(),12)));
             }
         });
 
@@ -149,4 +150,12 @@ public class Maps extends Fragment implements OnMapReadyCallback {
                 .title("Aktueller Standort"));
         gMap.moveCamera(CameraUpdateFactory.newLatLng(position));
     }
+
+    public static double round(double d, int decimalPlace) {
+        BigDecimal bd = new BigDecimal(Double.toString(d));
+        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+        return bd.doubleValue();
+    }
+
+
 }
