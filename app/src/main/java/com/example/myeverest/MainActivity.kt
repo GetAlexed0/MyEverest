@@ -18,7 +18,6 @@ class MainActivity : AppCompatActivity() {
 
     val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
     val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-    val mapsFragment: Fragment = Fragment()
 
 
     private lateinit var appBarConfiguration: AppBarConfiguration

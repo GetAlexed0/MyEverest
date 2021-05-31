@@ -34,4 +34,8 @@
     <string name="profil">Profil</string>
     <string name="freunde">Freunde</string>
     <string name="sozial">Sozial</string>
+    <string name="create_challenge_button">Create Challenge Button</string>
+    <string name="zielchallenge">Zielchallenge</string>
+    <string name="schrittchallenge">Schrittchallenge</string>
+    <string name="individualchallenge">Individualchallenge</string>
 </resources>

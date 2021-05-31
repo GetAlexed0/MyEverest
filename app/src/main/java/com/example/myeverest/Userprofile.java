@@ -41,11 +41,12 @@ public class Userprofile extends AppCompatActivity implements SensorEventListene
 
     boolean running = false;
     private long steps = 0;
+    String challengeID;
 
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     DocumentReference userDoc = firestore.collection("users").document(currentUser.getEmail());
-    DocumentReference testDoc = firestore.collection("challenges").document("iSTHVu0FKJiIhJ9dd447");
+    DocumentReference challengeDoc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +59,7 @@ public class Userprofile extends AppCompatActivity implements SensorEventListene
             requestPermissions(new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, 19);
         }
 
-
+        challengeDoc = firestore.collection("challenges").document(challengeID);
         sManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         stepText = findViewById(R.id.stepcounter);
         stepBar = findViewById(R.id.stepBar);

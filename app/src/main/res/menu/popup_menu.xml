@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/locationchallenge"
+        android:icon="@drawable/locationicon"
+        android:title="@string/zielchallenge"
+        />
+    <item
+        android:id="@+id/stepchallenge"
+        android:icon="@drawable/footsteps"
+        android:title="@string/schrittchallenge"
+        />
+    <item
+        android:id="@+id/individualchallenge"
+        android:icon="@drawable/gear"
+        android:title="@string/individualchallenge"
+        />
+</menu>
+
