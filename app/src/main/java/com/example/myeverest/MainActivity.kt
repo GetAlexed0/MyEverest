@@ -30,12 +30,12 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        mailConfirmed = findViewById(R.id.emailconfirmed)
+        //mailConfirmed = findViewById(R.id.emailconfirmed)
         if(firebaseAuth.currentUser != null) {
             val fuser: FirebaseUser = firebaseAuth.currentUser
             fuser.reload()
             if(fuser.isEmailVerified) {
-                mailConfirmed.setText("Email bestätigt")
+                //mailConfirmed.setText("Email bestätigt")
             }
         }
 
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         if(firebaseAuth.currentUser != null) {
             firebaseAuth.currentUser.reload();
             if(firebaseAuth.currentUser.isEmailVerified) {
-                mailConfirmed.setText("Email bestätigt")
+                //mailConfirmed.setText("Email bestätigt")
             }
 
         }
