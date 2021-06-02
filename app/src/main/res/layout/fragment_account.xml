@@ -58,11 +58,10 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.042"
+            app:layout_constraintHorizontal_bias="0.045"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.644" />
-
+            app:layout_constraintVertical_bias="0.547" />
 
         <TextView
             android:id="@+id/textView6"
@@ -75,12 +74,12 @@
             app:layout_constraintHorizontal_bias="0.039"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.771" />
+            app:layout_constraintVertical_bias="0.679" />
 
         <EditText
             android:id="@+id/editTextTextPostalAddress"
             android:layout_width="199dp"
-            android:layout_height="36dp"
+            android:layout_height="45dp"
             android:ems="10"
             android:hint="address_hint"
             android:inputType="textPostalAddress"
@@ -89,12 +88,12 @@
             app:layout_constraintHorizontal_bias="0.066"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.976" />
+            app:layout_constraintVertical_bias="0.896" />
 
         <EditText
             android:id="@+id/editTextDate"
             android:layout_width="85dp"
-            android:layout_height="36dp"
+            android:layout_height="45dp"
             android:ems="10"
             android:hint="birthdate_hint"
             android:inputType="date"
@@ -103,21 +102,21 @@
             app:layout_constraintHorizontal_bias="0.042"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.844" />
+            app:layout_constraintVertical_bias="0.752" />
 
         <EditText
             android:id="@+id/editTextPrename2"
-            android:layout_width="152dp"
-            android:layout_height="36dp"
+            android:layout_width="145dp"
+            android:layout_height="45dp"
             android:ems="10"
             android:hint="Vorname"
             android:inputType="textPersonName"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.061"
+            app:layout_constraintHorizontal_bias="0.06"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/frameLayout"
-            app:layout_constraintVertical_bias="0.715" />
+            app:layout_constraintVertical_bias="0.619" />
 
         <TextView
             android:id="@+id/textView10"
@@ -130,7 +129,7 @@
             app:layout_constraintHorizontal_bias="0.038"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.91" />
+            app:layout_constraintVertical_bias="0.811" />
 
         <TextView
             android:id="@+id/textView11"
@@ -140,35 +139,35 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.473"
+            app:layout_constraintHorizontal_bias="0.596"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.771" />
+            app:layout_constraintVertical_bias="0.679" />
 
         <EditText
             android:id="@+id/editTextEmailAddress"
             android:layout_width="151dp"
-            android:layout_height="36dp"
+            android:layout_height="45dp"
             android:ems="10"
             android:hint="mail_hint"
             android:inputType="textEmailAddress"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.7"
+            app:layout_constraintHorizontal_bias="0.88"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.844" />
+            app:layout_constraintVertical_bias="0.752" />
 
         <androidx.core.widget.NestedScrollView
-            android:layout_width="413dp"
-            android:layout_height="239dp"
+            android:layout_width="411dp"
+            android:layout_height="163dp"
             android:fillViewport="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.406">
+            app:layout_constraintVertical_bias="0.352">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -179,28 +178,29 @@
         <EditText
             android:id="@+id/editTextSurname2"
             android:layout_width="170dp"
-            android:layout_height="36dp"
+            android:layout_height="45dp"
             android:ems="10"
             android:hint="Nachname"
             android:inputType="textPersonName"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.755"
+            app:layout_constraintHorizontal_bias="0.95"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.715" />
+            app:layout_constraintVertical_bias="0.619" />
 
         <TextView
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Nachname"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.532"
+            app:layout_constraintHorizontal_bias="0.667"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.644" />
+            app:layout_constraintVertical_bias="0.547" />
 
         <Button
             android:id="@+id/setUserAttributes_btn"
@@ -209,10 +209,10 @@
             android:text="Button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.693"
+            app:layout_constraintHorizontal_bias="0.708"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.975" />
+            app:layout_constraintVertical_bias="0.896" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
