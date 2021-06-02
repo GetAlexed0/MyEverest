@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 
 import android.media.MediaCodec;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,22 +16,36 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myeverest.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.slider.Slider;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 public class ChallengeCreator extends Fragment {
 
-    TextView text, descriptionInput, pointInput;
+    TextView text, descriptionInput, pointInput, titleInput, textView;
     Button button;
     Slider seekBar;
     Bundle arguments;
-    String type;
+    String type, currentUser, userName;
+    Boolean exists;
+    QueryDocumentSnapshot ret;
+    FirebaseAuth fauth = FirebaseAuth.getInstance();
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
     @Override
@@ -44,10 +59,12 @@ public class ChallengeCreator extends Fragment {
     public void onActivityCreated(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         View v = getView();
-
+        currentUser = fauth.getCurrentUser().getEmail().toString().trim();
         descriptionInput = v.findViewById(R.id.description_input);
+        titleInput = v.findViewById(R.id.title_input);
         pointInput = v.findViewById(R.id.points_input);
 
+        textView = v.findViewById(R.id.textView9);
 
         button = v.findViewById(R.id.create_walking_btn);
         seekBar = v.findViewById(R.id.steps_seekBar);
@@ -63,14 +80,9 @@ public class ChallengeCreator extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DocumentReference metadata = firestore.collection("challenges").document();
-                metadata.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        //TODO
-                    }
-                });
-
+                if(checkFilledFields()) {
+                    createChallenge();
+                }
             }
         });
 
@@ -80,5 +92,85 @@ public class ChallengeCreator extends Fragment {
                 //text.setText(String.valueOf(seekBar.getValue()));
             }
         });
+
+
+
+    }
+
+    public boolean docExists(DocumentReference docRef) {
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()) {
+                    exists = true;
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull @NotNull Exception e) {
+                exists = false;
+            }
+        });
+
+        return exists;
+    }
+
+    public boolean checkFilledFields() {
+        boolean ret = true;
+        if(titleInput.getText().toString().isEmpty()) {
+            titleInput.setError("Titel darf nicht leer sein");
+            ret = false;
+        }
+
+        if(descriptionInput.getText().toString().isEmpty()) {
+            descriptionInput.setError("Beschreibung darf nicht leer sein");
+            ret = false;
+        }
+
+        if(pointInput.getText().toString().isEmpty()) {
+            pointInput.setError("Willst du keine Punkte? :)");
+            ret = false;
+        }
+
+        return ret;
+    }
+
+    public void createChallenge() {
+        String challengetitle = titleInput.getText().toString().trim();
+        DocumentReference challenge = firestore.collection("challenges").document(challengetitle);
+        challenge.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()) {
+                            DocumentSnapshot doc = task.getResult();
+                            if(doc.exists()) {
+                                //Wenn Challenge schon existiert
+                                titleInput.setError("Der Titel ist leider vergeben, versuch es doch mal mit einem anderen :)");
+                            }
+
+                            else {
+                                String desc = descriptionInput.getText().toString().trim();
+                                int points = Integer.parseInt(pointInput.getText().toString().trim());
+                                Map<String, Object> challengeMap = new HashMap<>();
+                                challengeMap.put("title", challengetitle);
+                                challengeMap.put("description", desc);
+                                challengeMap.put("points", points);
+                                challengeMap.put("creator", currentUser);
+                                challengeMap.put("challengetype", type);
+                                challengeMap.put("users", Arrays.asList("users/" + fauth.getCurrentUser().getEmail().toString().trim()));
+
+                                if(type == "WALK") {
+                                    challengeMap.put("steps", seekBar.getValue());
+                                }
+
+                                challenge.set(challengeMap);
+
+                                DocumentReference createdBy = firestore.collection("users").document(currentUser);
+                                createdBy.update("challenges", FieldValue.arrayUnion(challenge));
+
+                            }
+                        }
+                    }
+                });
     }
 }

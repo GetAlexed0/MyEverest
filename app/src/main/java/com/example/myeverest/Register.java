@@ -24,6 +24,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -84,68 +87,88 @@ public class Register extends AppCompatActivity {
                 }
 
                 if(TextUtils.isEmpty(name)) {
-                    mEMail.setError("Kein Name angegeben");
+                    mFullName.setError("Kein Name angegeben");
                     return;
                 }
 
-                if(TextUtils.isEmpty(password)) {
-                    mPassword.setError("Kein Passwort angegeben");
-                    return;
-                }
-
-                if(TextUtils.isEmpty(vorname)) {
-                    mPrename.setError("Kein Vorname angegeben");
-                    return;
-                }
-
-                if(TextUtils.isEmpty(nachname)) {
-                    mSurname.setError("Kein Nachname angegeben");
-                    return;
-                }
-
-                if(password.length() < 6) {
-                    mPassword.setError(("Password muss minimum 6 Zeichen lang sein"));
-                    return;
-                }
-
-                mProgressBar.setVisibility(View.VISIBLE);
-
-                //registriert den Nutzer in Firebase
-
-                fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-                    if(task.isSuccessful()) {
-
-                        //EMail bestätigungslink versenden
-
-                        FirebaseUser fUser = fAuth.getCurrentUser();
-                        fUser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                System.out.println("Hallo?");
-                                Toast.makeText(Register.this, "Bestätigungslink wurde verschickt", Toast.LENGTH_SHORT).show();
+                Query username = firestore.collection("users").whereEqualTo("username", name);
+                username.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            for (QueryDocumentSnapshot i : task.getResult()) {
+                                mFullName.setError("Username existiert bereits");
+                                return;
                             }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull @NotNull Exception e) {
-                                Toast.makeText(Register.this, "Fehler. mail nicht verschickt" + e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                            if(TextUtils.isEmpty(name))
+                            {
+                                mFullName.setError("Kein Benutzername angegeben");
+                                return;
                             }
-                        });
 
-                        Toast.makeText(Register.this, "User erstellt", Toast.LENGTH_LONG).show();
-                        userID = fAuth.getCurrentUser().getUid();
-                        DocumentReference documentReference = firestore.collection("users").document(email);
-                        Map<String, Object> user = new HashMap<>();
-                        user.put("username", name);
-                        user.put("email", email);
-                        user.put("vorname", vorname);
-                        user.put("nachname", nachname);
-                        documentReference.set(user);
-                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                    }
+                            if(TextUtils.isEmpty(password)) {
+                                mPassword.setError("Kein Passwort angegeben");
+                                return;
+                            }
 
-                    else {
-                        Toast.makeText(Register.this, "Fehler:" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+                            if(TextUtils.isEmpty(vorname)) {
+                                mPrename.setError("Kein Vorname angegeben");
+                                return;
+                            }
+
+                            if(TextUtils.isEmpty(nachname)) {
+                                mSurname.setError("Kein Nachname angegeben");
+                                return;
+                            }
+
+                            if(password.length() < 6) {
+                                mPassword.setError(("Password muss minimum 6 Zeichen lang sein"));
+                                return;
+                            }
+
+                            mProgressBar.setVisibility(View.VISIBLE);
+
+                            //registriert den Nutzer in Firebase
+
+                            fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task2 -> {
+                                if(task2.isSuccessful()) {
+
+                                    //EMail bestätigungslink versenden
+
+                                    FirebaseUser fUser = fAuth.getCurrentUser();
+                                    fUser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            System.out.println("Hallo?");
+                                            Toast.makeText(Register.this, "Bestätigungslink wurde verschickt", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull @NotNull Exception e) {
+                                            Toast.makeText(Register.this, "Fehler. mail nicht verschickt" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
+                                    Toast.makeText(Register.this, "User erstellt", Toast.LENGTH_LONG).show();
+                                    userID = fAuth.getCurrentUser().getUid();
+                                    DocumentReference documentReference = firestore.collection("users").document(email);
+                                    Map<String, Object> user = new HashMap<>();
+                                    user.put("username", name);
+                                    user.put("email", email);
+                                    user.put("vorname", vorname);
+                                    user.put("nachname", nachname);
+                                    documentReference.set(user);
+                                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                }
+
+                                else {
+                                    Toast.makeText(Register.this, "Fehler:" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    };
+
                 });
             }
         });
