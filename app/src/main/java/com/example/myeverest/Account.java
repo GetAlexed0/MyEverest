@@ -86,6 +86,7 @@ public class Account extends Fragment {
         profilePic = v.findViewById(R.id.profilePic);
         mChangeButton = v.findViewById(R.id.setUserAttributes_btn);
         mEMail = v.findViewById(R.id.editTextEmailAddress);
+        mUsername = v.findViewById(R.id.username);
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
