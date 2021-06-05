@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var mailConfirmed: TextView;
     lateinit var userName: String;
 
+
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {

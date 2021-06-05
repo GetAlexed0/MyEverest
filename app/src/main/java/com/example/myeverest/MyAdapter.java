@@ -1,0 +1,69 @@
+package com.example.myeverest;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+
+    Context context;
+    ArrayList<User> list;
+
+    public MyAdapter(Context context, ArrayList<User> list) {
+        this.context = context;
+        this.list = list;
+    }
+
+   /* @NonNull
+    @Override
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+       // View v = LayoutInflater.from(context).inflate(R.layout.item,parent,false);
+        return  new MyViewHolder(get);
+    }*/
+
+    @NonNull
+    @NotNull
+    @Override
+    public MyViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+        return null;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+
+        User user = list.get(position);
+        holder.firstName.setText(user.getFirstName());
+        holder.lastName.setText(user.getLastName());
+        //holder.age.setText(user.getAge());
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return list.size();
+    }
+
+    public static class MyViewHolder extends RecyclerView.ViewHolder{
+
+        TextView firstName, lastName; //age ist auch weg
+
+        public MyViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            //firstName = itemView.findViewById(R.id.tvfirstName);
+            //lastName = itemView.findViewById(R.id.tvlastName);
+            //age = itemView.findViewById(R.id.tvage);
+
+        }
+    }
+
+}

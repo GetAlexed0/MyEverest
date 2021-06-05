@@ -28,4 +28,7 @@ class GalleryFragment : Fragment() {
         })*/
         return root
     }
+
+
+
 }

@@ -50,6 +50,7 @@ public class Login extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
 
 
+
         mCreateAccount.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(),Register.class)));
 
         mLoginButton.setOnClickListener(v -> {

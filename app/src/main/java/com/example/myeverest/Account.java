@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -49,14 +50,11 @@ import static android.app.Activity.RESULT_OK;
 
 public class Account extends Fragment {
 
-    EditText mPrename, mAddress, mBirthdate, mSurname;
+    EditText mPrename, mAddress, mBirthdate, mSurname, mEMail;
     Button mChangeButton;
     FirebaseAuth fAuth;
     FirebaseFirestore firestore;
-    String vorname;
-    String nachname;
-    String adresse;
-    String geburtsdatum;
+    String vorname, nachname, adresse, geburtsdatum;
 
     private ImageView profilePic;
     private Uri imageUri;
@@ -85,6 +83,7 @@ public class Account extends Fragment {
         mBirthdate = v.findViewById(R.id.editTextDate);
         profilePic = v.findViewById(R.id.profilePic);
         mChangeButton = v.findViewById(R.id.setUserAttributes_btn);
+        mEMail = v.findViewById(R.id.editTextEmailAddress);
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -103,14 +102,20 @@ public class Account extends Fragment {
                 changeData();
             }
         });
-    }
-    public void changeData() {
 
+    }
+
+    public void changeData() {
 
         vorname = mPrename.getText().toString().trim();
         nachname = mSurname.getText().toString().trim();
         adresse = mAddress.getText().toString().trim();
         geburtsdatum = mBirthdate.getText().toString().trim();
+
+        mPrename.setText(vorname);
+        mSurname.setText(nachname);
+        mAddress.setText(adresse);
+        mBirthdate.setText(geburtsdatum);
 
         DocumentReference docRef = firestore.collection("users").document(fAuth.getCurrentUser().getEmail());
         docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -125,16 +130,47 @@ public class Account extends Fragment {
 
                 if (snapshot != null && snapshot.exists()) {
                     Log.d("Account", "Current data: " + snapshot.get("vorname"));
-                    //rest hinzufügen
+                    Log.d("Account", "Current data: " + snapshot.get("nachname"));
+                    Log.d("Account", "Current data: " + snapshot.get("adresse"));
+                    Log.d("Account", "Current data: " + snapshot.get("geburtsdatum"));
+                    Log.d("Account", "Current data: " + snapshot.get("email"));
+                    Log.d("Account", "Current data: " + snapshot.get("username"));
                 } else {
                     Log.d("Account", "Current data: null");
                 }
             }
         });
- //null prüfen
-        docRef.update("vorname", vorname);
+
+        mEMail.setFocusable(false);
+
+                if(TextUtils.isEmpty(vorname)) {
+                    mPrename.setError("Kein Vorname eingegeben");
+                    return;
+                }
+
+                docRef.update("vorname", vorname);
+
+
+                if(TextUtils.isEmpty(nachname)) {
+                    mSurname.setError("Kein Nachname eingegeben");
+                    return;
+                }
+
         docRef.update("nachname", nachname);
+
+
+                if(TextUtils.isEmpty(adresse)) {
+                    mAddress.setError("Keine Adresse eingegeben");
+                    return;
+        }
+
         docRef.update("adresse", adresse );
+
+        if(TextUtils.isEmpty(geburtsdatum) && geburtsdatum.length() < 10) {
+            mBirthdate.setError("Keingültiges Geburtsdatum eingegeben");
+            return;
+        }
+
         docRef.update("geburtsdatum", geburtsdatum);
 
         }
@@ -154,18 +190,18 @@ public class Account extends Fragment {
             imageUri = data.getData();
             profilePic.setImageURI(imageUri);
             uploadPicture();
-
         }
     }
 
     private void uploadPicture() {
+
 
         final View v = getView();
         final ProgressDialog pd = new ProgressDialog(v.getContext());
         pd.setTitle("Bild wird hochgeladen...");
         pd.show();
 
-        final String randomKey = UUID.randomUUID().toString();
+        final String randomKey = fAuth.getCurrentUser().getEmail();
         StorageReference riversRef = storageReference.child("images/" + randomKey);
 
         riversRef.putFile(imageUri)

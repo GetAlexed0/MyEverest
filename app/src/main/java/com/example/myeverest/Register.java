@@ -55,8 +55,8 @@ public class Register extends AppCompatActivity {
         mLoginText = findViewById(R.id.loginText);
         mPrename = findViewById(R.id.editTextPrename);
         mSurname = findViewById(R.id.editTextSurname);
-
         mProgressBar = findViewById(R.id.progressBar);
+
         firestore = FirebaseFirestore.getInstance();
         fAuth = FirebaseAuth.getInstance();
 
@@ -150,7 +150,7 @@ public class Register extends AppCompatActivity {
                                         }
                                     });
 
-                                    Toast.makeText(Register.this, "User erstellt", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(Register.this, "com.example.myeverest.User erstellt", Toast.LENGTH_LONG).show();
                                     userID = fAuth.getCurrentUser().getUid();
                                     DocumentReference documentReference = firestore.collection("users").document(email);
                                     Map<String, Object> user = new HashMap<>();
