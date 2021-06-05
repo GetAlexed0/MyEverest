@@ -196,8 +196,6 @@ public class Account extends Fragment {
             }
         });
         mEMail.setFocusable(false);
-        mUsername.setFocusable(false);
-
     }
 
     private void choosePicture() {
