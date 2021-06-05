@@ -52,7 +52,8 @@ import static android.app.Activity.RESULT_OK;
 
 public class Account extends Fragment {
 
-    EditText mPrename, mAddress, mBirthdate, mSurname, mEMail, mUsername;
+    EditText mPrename, mAddress, mBirthdate, mSurname, mEMail;
+    TextView mUsername;
     Button mChangeButton;
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
