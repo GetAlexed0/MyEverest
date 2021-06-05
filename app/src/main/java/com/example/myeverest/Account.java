@@ -24,8 +24,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -50,16 +52,17 @@ import static android.app.Activity.RESULT_OK;
 
 public class Account extends Fragment {
 
-    EditText mPrename, mAddress, mBirthdate, mSurname, mEMail;
+    EditText mPrename, mAddress, mBirthdate, mSurname, mEMail, mUsername;
     Button mChangeButton;
-    FirebaseAuth fAuth;
-    FirebaseFirestore firestore;
+    FirebaseAuth fAuth = FirebaseAuth.getInstance();
+    FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     String vorname, nachname, adresse, geburtsdatum;
 
     private ImageView profilePic;
     private Uri imageUri;
     private FirebaseStorage storage;
     private StorageReference storageReference;
+    DocumentReference docRef = firestore.collection("users").document(fAuth.getCurrentUser().getEmail());
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,8 +77,7 @@ public class Account extends Fragment {
         super.onActivityCreated(savedInstanceState);
         View v = getView();
 
-        firestore = FirebaseFirestore.getInstance();
-        fAuth = FirebaseAuth.getInstance();
+
 
         mPrename = v.findViewById(R.id.editTextPrename2);
         mSurname = v.findViewById(R.id.editTextSurname2);
@@ -88,6 +90,7 @@ public class Account extends Fragment {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
+        prepareDataForUser();
 
         profilePic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,36 +115,24 @@ public class Account extends Fragment {
         adresse = mAddress.getText().toString().trim();
         geburtsdatum = mBirthdate.getText().toString().trim();
 
-        mPrename.setText(vorname);
-        mSurname.setText(nachname);
-        mAddress.setText(adresse);
-        mBirthdate.setText(geburtsdatum);
-
-        DocumentReference docRef = firestore.collection("users").document(fAuth.getCurrentUser().getEmail());
-        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable @org.jetbrains.annotations.Nullable DocumentSnapshot snapshot,
-                                @Nullable @org.jetbrains.annotations.Nullable FirebaseFirestoreException error) {
-
-                if (error != null) {
-                    Log.w("Account", "Listen failed.", error);
-                    return;
-                }
-
-                if (snapshot != null && snapshot.exists()) {
+        /*
+        if (snapshot != null && snapshot.exists()) {
                     Log.d("Account", "Current data: " + snapshot.get("vorname"));
                     Log.d("Account", "Current data: " + snapshot.get("nachname"));
                     Log.d("Account", "Current data: " + snapshot.get("adresse"));
                     Log.d("Account", "Current data: " + snapshot.get("geburtsdatum"));
                     Log.d("Account", "Current data: " + snapshot.get("email"));
                     Log.d("Account", "Current data: " + snapshot.get("username"));
+
+                    mPrename.setText(snapshot.get("vorname").toString());
+                    mSurname.setText(snapshot.get("nachname").toString());
+                    mAddress.setText(snapshot.get("adresse").toString());
+                    mBirthdate.setText(snapshot.get("geburtsdatum").toString());
+                    mEMail.setText(snapshot.get("email").toString());
                 } else {
                     Log.d("Account", "Current data: null");
                 }
-            }
-        });
-
-        mEMail.setFocusable(false);
+         */
 
                 if(TextUtils.isEmpty(vorname)) {
                     mPrename.setError("Kein Vorname eingegeben");
@@ -173,7 +164,41 @@ public class Account extends Fragment {
 
         docRef.update("geburtsdatum", geburtsdatum);
 
-        }
+    }
+
+    private void prepareDataForUser() {
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot snapshot = task.getResult();
+                    if(snapshot.exists()) {
+                        Log.d("Account", "Current data: " + snapshot.get("vorname"));
+                        Log.d("Account", "Current data: " + snapshot.get("nachname"));
+                        Log.d("Account", "Current data: " + snapshot.get("adresse"));
+                        Log.d("Account", "Current data: " + snapshot.get("geburtsdatum"));
+                        Log.d("Account", "Current data: " + snapshot.get("email"));
+                        Log.d("Account", "Current data: " + snapshot.get("username"));
+
+                        mPrename.setText(snapshot.get("vorname").toString());
+                        mSurname.setText(snapshot.get("nachname").toString());
+                        mUsername.setText(snapshot.get("username").toString());
+                        if(snapshot.get("adresse") != null) {
+                            mAddress.setText(snapshot.get("adresse").toString());
+                        }
+                        if(snapshot.get("geburtsdatum") != null) {
+                            mBirthdate.setText(snapshot.get("geburtsdatum").toString());
+                        }
+                        mEMail.setText(snapshot.get("email").toString());
+                    }
+                }
+            }
+        });
+        mEMail.setFocusable(false);
+        mUsername.setFocusable(false);
+
+    }
 
     private void choosePicture() {
         Intent intent = new Intent();

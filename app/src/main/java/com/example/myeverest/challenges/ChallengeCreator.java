@@ -2,10 +2,8 @@ package com.example.myeverest.challenges;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
-import android.media.MediaCodec;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,8 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.myeverest.Helpers.CallBack;
 import com.example.myeverest.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -22,13 +20,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.slider.Slider;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -93,6 +89,13 @@ public class ChallengeCreator extends Fragment {
             }
         });
 
+
+        checkAnswerSubmission(new CallBack<DocumentSnapshot>() {
+            @Override
+            public void callback(DocumentSnapshot data) {
+                Log.d("Testcallback", data.getData() + " Hallo");
+            }
+        });
 
 
     }
@@ -172,5 +175,28 @@ public class ChallengeCreator extends Fragment {
                         }
                     }
                 });
+    }
+
+    private void checkAnswerSubmission(@NonNull CallBack<DocumentSnapshot> finishedCallback) {
+
+        DocumentReference answerDatabase = firestore.collection("users").document("sgullmann@gmail.com");
+        answerDatabase.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+
+                    if (document.exists()) {
+                        finishedCallback.callback(document);
+                        Log.d("Testcallback", "In der if");
+                    } else {
+                        Log.d("Testcallback", "In der else");
+                    }
+                }
+                else {
+                    Log.d("Testcallback", "Penis");
+                }
+            }
+        });
     }
 }

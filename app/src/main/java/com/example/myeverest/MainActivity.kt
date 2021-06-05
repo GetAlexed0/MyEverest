@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
                 Log.w("TAG", "Error getting documents: ", exception)
             }*/
 
-        firestore.collection("users")
+        /*firestore.collection("users")
             .whereEqualTo("email", "sgullmann@gmail.com")
             .get()
             .addOnCompleteListener { task ->
@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     Log.d("TAG", "Error getting documents: ", task.exception)
                 }
-            }
+            }*/
     }
 
     override fun onResume() {
