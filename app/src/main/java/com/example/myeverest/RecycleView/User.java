@@ -1,4 +1,4 @@
-package com.example.myeverest;
+package com.example.myeverest.RecycleView;
 
 public class User {
 

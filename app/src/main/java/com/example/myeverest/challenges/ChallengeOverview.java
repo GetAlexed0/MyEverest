@@ -1,4 +1,4 @@
-package com.example.myeverest;
+package com.example.myeverest.challenges;
 
 import android.content.res.ObbInfo;
 import android.os.Bundle;
@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.myeverest.Helpers.CallBack;
 import com.example.myeverest.Helpers.CustomAdapter;
+import com.example.myeverest.R;
 import com.example.myeverest.challenges.Maps;
 import com.example.myeverest.challenges.ChallengeCreator;
 import com.google.android.gms.tasks.OnCompleteListener;

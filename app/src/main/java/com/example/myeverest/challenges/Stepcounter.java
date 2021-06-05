@@ -1,4 +1,4 @@
-package com.example.myeverest;
+package com.example.myeverest.challenges;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -20,6 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myeverest.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,7 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.jetbrains.annotations.NotNull;
 
-public class Userprofile extends AppCompatActivity implements SensorEventListener {
+public class Stepcounter extends AppCompatActivity implements SensorEventListener {
     Sensor stepSensor;
     SensorManager sManager;
     TextView stepText;
@@ -51,7 +52,7 @@ public class Userprofile extends AppCompatActivity implements SensorEventListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_userprofile);
+        setContentView(R.layout.fragment_stepcounter);
 
         if(ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_DENIED && Build.VERSION.SDK_INT >= 23){

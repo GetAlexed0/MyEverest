@@ -20,8 +20,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyEverest">
-        <activity android:name=".userlist"></activity>
-        <activity android:name=".Insta">
+        <activity android:name=".RecycleView.Userlist"></activity>
+        <activity android:name=".RecycleView.Insta">
         </activity>
         <activity
             android:name=".ui.StartingActivity"
@@ -33,7 +33,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".challenges.ChallengeCreator" />
-        <activity android:name=".Account" />
+        <activity android:name=".User.Account" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -49,9 +49,9 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".Userprofile" />
-        <activity android:name=".Login" />
-        <activity android:name=".Register" />
+        <activity android:name=".challenges.Stepcounter" />
+        <activity android:name=".User.Login" />
+        <activity android:name=".User.Register" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"

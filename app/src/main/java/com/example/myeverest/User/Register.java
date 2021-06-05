@@ -1,13 +1,11 @@
-package com.example.myeverest;
+package com.example.myeverest.User;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,11 +13,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myeverest.MainActivity;
+import com.example.myeverest.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -150,7 +149,7 @@ public class Register extends AppCompatActivity {
                                         }
                                     });
 
-                                    Toast.makeText(Register.this, "com.example.myeverest.User erstellt", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(Register.this, "com.example.myeverest.RecycleView.User erstellt", Toast.LENGTH_LONG).show();
                                     userID = fAuth.getCurrentUser().getUid();
                                     DocumentReference documentReference = firestore.collection("users").document(email);
                                     Map<String, Object> user = new HashMap<>();

@@ -1,4 +1,4 @@
-package com.example.myeverest;
+package com.example.myeverest.User;
 
 import android.app.Activity;
 

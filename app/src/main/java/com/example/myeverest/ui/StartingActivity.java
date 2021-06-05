@@ -2,11 +2,10 @@ package com.example.myeverest.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.myeverest.Login;
+import Login;
 import com.example.myeverest.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 

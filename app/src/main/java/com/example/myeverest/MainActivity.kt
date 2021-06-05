@@ -2,14 +2,14 @@ package com.example.myeverest
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.Menu
-import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.ui.AppBarConfiguration
+import com.example.myeverest.User.Account
+import com.example.myeverest.User.Friends
+import com.example.myeverest.User.Login
+import com.example.myeverest.challenges.ChallengeOverview
 import com.example.myeverest.challenges.Maps
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -101,11 +101,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.main, menu)
-        return true
-    }
 
 
     private fun switchFragments(fragment: Fragment) {
