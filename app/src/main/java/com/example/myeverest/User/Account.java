@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.example.myeverest.Helpers.DataHandler;
 import com.example.myeverest.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -94,6 +95,9 @@ public class Account extends Fragment {
         storageReference = storage.getReference();
 
         prepareDataForUser();
+
+        String s = ((DataHandler) this.getActivity().getApplication()).getUsername();
+        Log.d("WirdFailen", s);
 
         profilePic.setOnClickListener(new View.OnClickListener() {
             @Override

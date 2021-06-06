@@ -1,5 +1,6 @@
 package com.example.myeverest.challenges;
 
+import android.content.SharedPreferences;
 import android.content.res.ObbInfo;
 import android.os.Bundle;
 
@@ -8,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -23,6 +25,7 @@ import android.widget.Toast;
 
 import com.example.myeverest.Helpers.CallBack;
 import com.example.myeverest.Helpers.CustomAdapter;
+import com.example.myeverest.Helpers.DataHandler;
 import com.example.myeverest.R;
 import com.example.myeverest.challenges.Maps;
 import com.example.myeverest.challenges.ChallengeCreator;
@@ -68,13 +71,11 @@ public class ChallengeOverview extends Fragment {
             }
         });
 
-        checkAnswerSubmission(new CallBack<List<DocumentSnapshot>>() {
-            @Override
-            public void callback(List<DocumentSnapshot> data) {
-                user = data.get(0);
-                Log.d("Fehler", user.get("username").toString());
-            }
-        },"leni@live.de");
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        String  data = sharedPreferences.getString("username", "failed");
+
+        Log.d("Klapptnicht", data);
+
     }
 
 
@@ -139,12 +140,7 @@ public class ChallengeOverview extends Fragment {
 
 
     private void setUser(String username) {
-        checkAnswerSubmission(new CallBack<List<DocumentSnapshot>>() {
-            @Override
-            public void callback(List<DocumentSnapshot> data) {
-                user = data.get(0);
-            }
-        }, username);
+
     }
 
     private void checkAnswerSubmission(@NonNull CallBack<List<DocumentSnapshot>> finishedCallback, String getting) {

@@ -6,6 +6,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.ui.AppBarConfiguration
+import com.example.myeverest.Helpers.CallBack
+import com.example.myeverest.Helpers.DataHandler
+import com.example.myeverest.Helpers.DatabaseHandler
 import com.example.myeverest.User.Account
 import com.example.myeverest.User.Friends
 import com.example.myeverest.User.Login
@@ -100,8 +103,6 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
-
-
 
     private fun switchFragments(fragment: Fragment) {
         val manager = supportFragmentManager
