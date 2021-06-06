@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,11 +56,12 @@ import static android.app.Activity.RESULT_OK;
 public class Account extends Fragment {
 
     EditText mPrename, mAddress, mBirthdate, mSurname, mEMail;
-    TextView mUsername;
+    TextView mUsername, currentLvl;
     Button mChangeButton;
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     String vorname, nachname, adresse, geburtsdatum;
+    ProgressBar lvlBar;
 
     private ImageView profilePic;
     private Uri imageUri;
@@ -90,14 +92,13 @@ public class Account extends Fragment {
         mChangeButton = v.findViewById(R.id.setUserAttributes_btn);
         mEMail = v.findViewById(R.id.editTextEmailAddress);
         mUsername = v.findViewById(R.id.username);
+        lvlBar = v.findViewById(R.id.lvlbar);
+        currentLvl = v.findViewById(R.id.currentlvl);
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
         prepareDataForUser();
-
-        String s = ((DataHandler) this.getActivity().getApplication()).getUsername();
-        Log.d("WirdFailen", s);
 
         profilePic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,8 +114,10 @@ public class Account extends Fragment {
             }
         });
 
-    }
+        currentLvl.setText(String.valueOf(getLevel(2500)));
+        lvlBar.setProgress((int) (getProgressToNextLevel(2500)*100));
 
+    }
     public void changeData() {
 
         vorname = mPrename.getText().toString().trim();
@@ -256,6 +259,23 @@ public class Account extends Fragment {
                         pd.setMessage("Stand: " + (int) progressPercent + "%" );
                     }
                 });
+
+
+    }
+
+    private static int getLevel(int xp) {
+        int ret = (int) (-1 + Math.sqrt(1+xp/100));
+        return ret;
+    }
+
+    private static double getProgressToNextLevel(int xp) {
+        double lvl = getLevel(xp);
+        double explvlbefore = 100 * Math.pow(lvl, 2) + 200*(lvl);
+        double expneeded = 100 * Math.pow(lvl+1, 2) + 200*(lvl+1);
+        double differenceBefore = xp - explvlbefore;
+        double differenceNext = expneeded - explvlbefore;
+        System.out.println("Nächstes Level exp: " + expneeded);
+        return differenceBefore/differenceNext;
 
 
     }
