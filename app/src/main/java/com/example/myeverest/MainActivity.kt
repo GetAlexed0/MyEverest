@@ -14,6 +14,7 @@ import com.example.myeverest.User.Friends
 import com.example.myeverest.User.Login
 import com.example.myeverest.challenges.ChallengeOverview
 import com.example.myeverest.challenges.Maps
+import com.example.myeverest.challenges.Stepcounter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
@@ -55,8 +56,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.friends_page -> {
-                    val switchActivityIntent = Intent(this, Friends::class.java)
-                    startActivity(switchActivityIntent)
+                    switchFragments(Stepcounter())
                     true
                 }
                 R.id.logout_bar -> {

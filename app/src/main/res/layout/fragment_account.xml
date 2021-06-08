@@ -28,14 +28,14 @@
                 android:src="@color/purple_700"
                 android:visibility="visible" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="50dp"
                 android:text="@string/user_name"
-                android:textColor="?attr/colorOnSecondary"
+                android:textColor="@color/orange"
                 android:textSize="20sp" />
 
             <ImageView
@@ -233,13 +233,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Current Level"
+            android:text="Aktuelles Level"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/frameLayout"
             app:layout_constraintVertical_bias="0.32999998" />
+
+        <TextView
+            android:id="@+id/progressabsolute"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Aktuelles Level"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/frameLayout"
+            app:layout_constraintVertical_bias="0.42000002" />
 
         <TextView
             android:id="@+id/currentlvl"
@@ -253,7 +266,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/frameLayout"
-            app:layout_constraintVertical_bias="0.38" />
+            app:layout_constraintVertical_bias="0.37" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

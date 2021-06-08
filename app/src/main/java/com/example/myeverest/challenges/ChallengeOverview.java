@@ -17,10 +17,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.R.layout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myeverest.Helpers.CallBack;
@@ -32,14 +34,20 @@ import com.example.myeverest.challenges.ChallengeCreator;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +56,10 @@ public class ChallengeOverview extends Fragment {
     FloatingActionButton createButton;
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     ListView listView;
-    DocumentSnapshot user;
+    DocumentReference userDoc;
+    String username;
+    TextView titleInput;
+    Button joinButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,6 +75,13 @@ public class ChallengeOverview extends Fragment {
 
         listView = v.findViewById(R.id.listview);
         createButton = v.findViewById(R.id.floatingActionButton);
+        joinButton = v.findViewById(R.id.joinChallengeButton);
+        titleInput = v.findViewById(R.id.joinChallenge);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        username = sharedPreferences.getString("username", "failed");
+
+        userDoc = firestore.collection("users").document(username);
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,11 +89,53 @@ public class ChallengeOverview extends Fragment {
             }
         });
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-        String  data = sharedPreferences.getString("username", "failed");
+        joinButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!titleInput.getText().toString().isEmpty()) {
+                    joinChallenge();
+                }
+                else {
+                    titleInput.setError("Dieses Feld solltest du ausfüllen");
+                }
+            }
+        });
 
-        Log.d("Klapptnicht", data);
+        checkAnswerSubmission(new CallBack<List<DocumentSnapshot>>() {
+            @Override
+            public void callback(List<DocumentSnapshot> data) {
+                String[] list = new String[data.size()];
 
+                for(int i = 0; i < data.size(); i++) {
+                    Log.d("Joar2", data.get(i).get("title").toString());
+                    list[i] = data.get(i).get("title").toString();
+                }
+                ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(getContext(), layout.simple_list_item_1, list);
+                listView.setAdapter(adapter);
+
+            }
+        }, username);
+    }
+
+    private void joinChallenge() {
+        String challengeTitle = titleInput.getText().toString();
+        DocumentReference challengeDoc = firestore.collection("challenges").document(challengeTitle);
+        challengeDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot snapshot = task.getResult();
+                    if(snapshot.exists()) {
+                        challengeDoc.update("users", FieldValue.arrayUnion(username));
+                        userDoc.update("challenges", FieldValue.arrayUnion(challengeTitle));
+                    }
+
+                    else {
+                        titleInput.setError("Die angegebene Challenge existiert nicht, hast du dich vertippt? \nBeachte Groß-/Kleinschreibung!");
+                    }
+                }
+            }
+        });
     }
 
 
@@ -139,30 +199,18 @@ public class ChallengeOverview extends Fragment {
     }*/
 
 
-    private void setUser(String username) {
-
-    }
-
     private void checkAnswerSubmission(@NonNull CallBack<List<DocumentSnapshot>> finishedCallback, String getting) {
 
         List<DocumentSnapshot> list = new ArrayList<>();
-        DocumentReference answerDatabase = firestore.collection("users").document(getting);
-        answerDatabase.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        CollectionReference answerDatabase = firestore.collection("challenges");
+        answerDatabase.whereArrayContains("users", getting).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-
-                    if (document.exists()) {
+            public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()) {
+                    for(QueryDocumentSnapshot document : task.getResult()) {
                         list.add(document);
-                        finishedCallback.callback(list);
-                        Log.d("Testcallback", "In der if");
-                    } else {
-                        Log.d("Testcallback", "In der else");
                     }
-                }
-                else {
-                    Log.d("Testcallback", "Penis");
+                    finishedCallback.callback(list);
                 }
             }
         });

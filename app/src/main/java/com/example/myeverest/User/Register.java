@@ -166,7 +166,7 @@ public class Register extends AppCompatActivity {
 
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
                                     editor.putString("username", name);
-                                    editor.commit();
+                                    editor.apply();
 
                                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                                 }
