@@ -101,6 +101,32 @@ public class ChallengeOverview extends Fragment {
             }
         });
 
+        refreshChallenges();
+    }
+
+    private void joinChallenge() {
+        String challengeTitle = titleInput.getText().toString();
+        DocumentReference challengeDoc = firestore.collection("challenges").document(challengeTitle);
+        challengeDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot snapshot = task.getResult();
+                    if(snapshot.exists()) {
+                        challengeDoc.update("users", FieldValue.arrayUnion(username));
+                        userDoc.update("challenges", FieldValue.arrayUnion(challengeTitle));
+                        refreshChallenges();
+                    }
+
+                    else {
+                        titleInput.setError("Die angegebene Challenge existiert nicht, hast du dich vertippt? \nBeachte Groß-/Kleinschreibung!");
+                    }
+                }
+            }
+        });
+    }
+
+    public void refreshChallenges() {
         checkAnswerSubmission(new CallBack<List<DocumentSnapshot>>() {
             @Override
             public void callback(List<DocumentSnapshot> data) {
@@ -116,29 +142,6 @@ public class ChallengeOverview extends Fragment {
             }
         }, username);
     }
-
-    private void joinChallenge() {
-        String challengeTitle = titleInput.getText().toString();
-        DocumentReference challengeDoc = firestore.collection("challenges").document(challengeTitle);
-        challengeDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()) {
-                    DocumentSnapshot snapshot = task.getResult();
-                    if(snapshot.exists()) {
-                        challengeDoc.update("users", FieldValue.arrayUnion(username));
-                        userDoc.update("challenges", FieldValue.arrayUnion(challengeTitle));
-                    }
-
-                    else {
-                        titleInput.setError("Die angegebene Challenge existiert nicht, hast du dich vertippt? \nBeachte Groß-/Kleinschreibung!");
-                    }
-                }
-            }
-        });
-    }
-
-
     private void showMenu(View v) {
         PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {

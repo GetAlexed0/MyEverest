@@ -106,50 +106,7 @@ public class Stepcounter extends Fragment implements SensorEventListener {
 
         stepBar.setMax(300);
     }
-    /*
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_stepcounter);
 
-        if(ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_DENIED && Build.VERSION.SDK_INT >= 23){
-            //ask for permission
-            requestPermissions(new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, 19);
-        }
-
-        challengeDoc = firestore.collection("challenges").document(challengeID);
-        sManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        stepText = findViewById(R.id.stepcounter);
-        stepBar = findViewById(R.id.stepBar);
-        stepBar.setIndeterminate(false);
-        stepBar.setSecondaryProgress(100);
-
-        stepButton = findViewById(R.id.step_btn);
-        stepButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                steps++;
-                stepText.setText("Schritte: " + steps);
-                stepBar.setProgress((int) steps);
-            }
-        });
-
-        resetButton = findViewById(R.id.reset_btn);
-        resetButton.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onClick(View v) {
-                steps = 0;
-                stepText.setText("Schritte: " + steps);
-                stepBar.setProgress((int) steps, false);
-            }
-        });
-
-        stepBar.setMax(300);
-
-    }
-    */
     @Override
     public void onResume() {
         super.onResume();
@@ -227,5 +184,9 @@ public class Stepcounter extends Fragment implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    public void finishChallenge() {
+        //TODO
     }
 }
