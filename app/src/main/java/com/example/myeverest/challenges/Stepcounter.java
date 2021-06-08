@@ -1,12 +1,15 @@
 package com.example.myeverest.challenges;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,7 +17,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.preference.PreferenceManager;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -31,7 +37,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.jetbrains.annotations.NotNull;
 
-public class Stepcounter extends AppCompatActivity implements SensorEventListener {
+public class Stepcounter extends Fragment implements SensorEventListener {
     Sensor stepSensor;
     SensorManager sManager;
     TextView stepText;
@@ -42,32 +48,42 @@ public class Stepcounter extends AppCompatActivity implements SensorEventListene
 
     boolean running = false;
     private long steps = 0;
-    String challengeID;
+    String challengeID, username;
 
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-    DocumentReference userDoc = firestore.collection("users").document(currentUser.getEmail());
+    DocumentReference userDoc;
     DocumentReference challengeDoc;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_stepcounter);
 
-        if(ContextCompat.checkSelfPermission(this,
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_stepcounter, container, false);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        View v = getView();
+        if(ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_DENIED && Build.VERSION.SDK_INT >= 23){
             //ask for permission
             requestPermissions(new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, 19);
         }
 
-        challengeDoc = firestore.collection("challenges").document(challengeID);
-        sManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        stepText = findViewById(R.id.stepcounter);
-        stepBar = findViewById(R.id.stepBar);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        username = sharedPreferences.getString("username", "failed");
+        userDoc = firestore.collection("users").document(username);
+        //challengeDoc = firestore.collection("challenges").document(challengeID);
+        sManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        stepText = v.findViewById(R.id.stepcounter);
+        stepBar = v.findViewById(R.id.stepBar);
         stepBar.setIndeterminate(false);
         stepBar.setSecondaryProgress(100);
 
-        stepButton = findViewById(R.id.step_btn);
+        stepButton = v.findViewById(R.id.step_btn);
         stepButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,7 +93,7 @@ public class Stepcounter extends AppCompatActivity implements SensorEventListene
             }
         });
 
-        resetButton = findViewById(R.id.reset_btn);
+        resetButton = v.findViewById(R.id.reset_btn);
         resetButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
@@ -89,11 +105,10 @@ public class Stepcounter extends AppCompatActivity implements SensorEventListene
         });
 
         stepBar.setMax(300);
-
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         running = true;
         stepSensor = sManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
@@ -130,16 +145,16 @@ public class Stepcounter extends AppCompatActivity implements SensorEventListene
             }
         });
         if(stepSensor == null) {
-            Toast.makeText(this, "No Sensor detected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "No Sensor detected", Toast.LENGTH_SHORT).show();
         }
         else {
             sManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_NORMAL);
-            Toast.makeText(this, "Listener registered", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Listener registered", Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         running = false;
         sManager.unregisterListener(this);
@@ -147,7 +162,7 @@ public class Stepcounter extends AppCompatActivity implements SensorEventListene
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         sManager.unregisterListener(this, stepSensor);
         userDoc.update("steps", steps);
@@ -169,5 +184,9 @@ public class Stepcounter extends AppCompatActivity implements SensorEventListene
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    public void finishChallenge() {
+        //TODO
     }
 }

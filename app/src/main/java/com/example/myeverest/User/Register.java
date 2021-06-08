@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.myeverest.Helpers.DataHandler;
 import com.example.myeverest.MainActivity;
 import com.example.myeverest.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -149,15 +152,22 @@ public class Register extends AppCompatActivity {
                                         }
                                     });
 
-                                    Toast.makeText(Register.this, "com.example.myeverest.RecycleView.User erstellt", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(Register.this, "User wurde erstellt", Toast.LENGTH_LONG).show();
                                     userID = fAuth.getCurrentUser().getUid();
-                                    DocumentReference documentReference = firestore.collection("users").document(email);
+                                    DocumentReference documentReference = firestore.collection("users").document(name);
                                     Map<String, Object> user = new HashMap<>();
                                     user.put("username", name);
                                     user.put("email", email);
                                     user.put("vorname", vorname);
                                     user.put("nachname", nachname);
+                                    user.put("points", 0);
                                     documentReference.set(user);
+                                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putString("username", name);
+                                    editor.apply();
+
                                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                                 }
 

@@ -3,8 +3,17 @@ package com.example.myeverest.User;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.StrictMode;
+import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -16,14 +25,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.myeverest.Helpers.DataHandler;
 import com.example.myeverest.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -46,20 +58,38 @@ import com.google.firebase.storage.UploadTask;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 
-
 public class Account extends Fragment {
 
     TextView mUsername, mPrename, mAddress, mBirthdate, mSurname, mEMail;
+
+    TextView currentLvl, progressAbsolute;
     Button mChangeButton;
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-    String vorname, nachname, adresse, geburtsdatum;
+    String vorname, nachname, adresse, geburtsdatum, username;
+    ProgressBar lvlBar;
+
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
 
     private ImageView profilePic;
     private Uri imageUri;
@@ -72,7 +102,6 @@ public class Account extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_account, container, false);
-
     }
 
 
@@ -80,8 +109,11 @@ public class Account extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         View v = getView();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        username = sharedPreferences.getString("username", "failed");
+        docRef = firestore.collection("users").document(username);
 
-        mPrename = v.findViewById(R.id.editTextPrename_account);
+        mPrename = v.findViewById(R.id.editTextPrename2);
         mSurname = v.findViewById(R.id.editTextSurname2);
         mAddress = v.findViewById(R.id.editTextTextPostalAddress);
         mBirthdate = v.findViewById(R.id.editTextDate);
@@ -89,6 +121,9 @@ public class Account extends Fragment {
         mChangeButton = v.findViewById(R.id.setUserAttributes_btn);
         mEMail = v.findViewById(R.id.editTextEmailAddress);
         mUsername = v.findViewById(R.id.username);
+        lvlBar = v.findViewById(R.id.lvlbar);
+        currentLvl = v.findViewById(R.id.currentlvl);
+        progressAbsolute = v.findViewById(R.id.progressabsolute);
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -176,6 +211,14 @@ public class Account extends Fragment {
                             mBirthdate.setText(snapshot.get("geburtsdatum").toString());
                         }
                         mEMail.setText(snapshot.get("email").toString());
+                        int test = ((Long) snapshot.get("points")).intValue();
+                        currentLvl.setText(String.valueOf(getLevel(test)));
+                        lvlBar.setProgress((int) (getProgressToNextLevel(test, true)*100));
+                        progressAbsolute.setText(String.valueOf((int) (getProgressToNextLevel(test, false))) + "\n Punkte bis " + String.valueOf(getLevel(test)+1));
+
+                        if(snapshot.get("profilePic") != null) {
+                            loadUserImage(getView(), snapshot.get("profilePic").toString());
+                        }
                     }
                 }
             }
@@ -196,12 +239,28 @@ public class Account extends Fragment {
 
         if(requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null){
             imageUri = data.getData();
+            Bitmap bmp = null;
+            try {
+                bmp = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            float aspectRatio = bmp.getWidth() / (float) bmp.getHeight();
+            int width = 700;
+            int height = Math.round(width /aspectRatio);
+            bmp = Bitmap.createScaledBitmap(bmp, width, height, false);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 75, baos);
+            byte[] fileInBytes = baos.toByteArray();
             profilePic.setImageURI(imageUri);
-            uploadPicture();
+            uploadPicture(fileInBytes);
         }
     }
 
-    private void uploadPicture() {
+    private void uploadPicture(byte[] image) {
 
 
         final View v = getView();
@@ -209,15 +268,24 @@ public class Account extends Fragment {
         pd.setTitle("Bild wird hochgeladen...");
         pd.show();
 
-        final String randomKey = fAuth.getCurrentUser().getEmail();
-        StorageReference riversRef = storageReference.child("images/" + randomKey);
+        StorageReference riversRef = storageReference.child("images/" + username);
 
-        riversRef.putFile(imageUri)
+        riversRef.putBytes(image)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         pd.dismiss();
                         Snackbar.make(getView(), "Bild erfolgreich hinzugefügt", Snackbar.LENGTH_LONG).show();
+                        riversRef.getDownloadUrl()
+                                .addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                    @Override
+                                    public void onComplete(@NonNull @NotNull Task<Uri> task) {
+                                        if(task.isSuccessful()) {
+                                            Uri downloadUri = task.getResult();
+                                            docRef.update("profilePic", downloadUri.toString());
+                                        }
+                                    }
+                                });
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -237,6 +305,70 @@ public class Account extends Fragment {
 
 
     }
+
+    public void loadUserImage(View v, String imageUrl) {
+        /*Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ImageView i = (ImageView) v.findViewById(R.id.profilePic);
+                    Bitmap bitmap = BitmapFactory.decodeStream((InputStream)new URL(imageUrl).getContent());
+                    i.setImageBitmap(bitmap);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    thread.start();*/
+        new DownloadImageFromInternet((ImageView) v.findViewById(R.id.profilePic)).execute(imageUrl);
+    }
+    private static int getLevel(int xp) {
+        int ret = (int) (-1 + Math.sqrt(1+xp/100));
+        return ret;
+    }
+
+    private static double getProgressToNextLevel(int xp, boolean relative) {
+        double lvl = getLevel(xp);
+        double explvlbefore = 100 * Math.pow(lvl, 2) + 200*(lvl);
+        double expneeded = 100 * Math.pow(lvl+1, 2) + 200*(lvl+1);
+        double differenceBefore = xp - explvlbefore;
+        double differenceNext = expneeded - explvlbefore;
+        if(!relative) {
+            return expneeded - xp;
+        }
+        System.out.println("Nächstes Level exp: " + expneeded);
+        return differenceBefore/differenceNext;
+    }
+
+
+
+    private class DownloadImageFromInternet extends AsyncTask<String, Void, Bitmap> {
+        ImageView imageView;
+        public DownloadImageFromInternet(ImageView imageView) {
+            this.imageView=imageView;
+            Toast.makeText(getActivity().getApplicationContext(), "Please wait, it may take a few minute...",Toast.LENGTH_SHORT).show();
+        }
+        protected Bitmap doInBackground(String... urls) {
+            String imageURL=urls[0];
+            Bitmap bimage=null;
+            try {
+                InputStream in=new java.net.URL(imageURL).openStream();
+                bimage=BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error Message", e.getMessage());
+                e.printStackTrace();
+            }
+            return bimage;
+        }
+        protected void onPostExecute(Bitmap result) {
+            imageView.setImageBitmap(result);
+        }
+    }
+
 }
+
+
 
 

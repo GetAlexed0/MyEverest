@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +40,7 @@ public class ChallengeCreator extends Fragment {
     Button button;
     Slider seekBar;
     Bundle arguments;
-    String type, currentUser, userName;
+    String type, currentUser, username;
     Boolean exists;
     QueryDocumentSnapshot ret;
     FirebaseAuth fauth = FirebaseAuth.getInstance();
@@ -55,12 +57,13 @@ public class ChallengeCreator extends Fragment {
     public void onActivityCreated(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         View v = getView();
-        currentUser = fauth.getCurrentUser().getEmail().toString().trim();
         descriptionInput = v.findViewById(R.id.description_input);
         titleInput = v.findViewById(R.id.title_input);
         pointInput = v.findViewById(R.id.points_input);
 
-        textView = v.findViewById(R.id.textView9);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        username = sharedPreferences.getString("username", "failed");
 
         button = v.findViewById(R.id.create_walking_btn);
         seekBar = v.findViewById(R.id.steps_seekBar);
@@ -98,24 +101,6 @@ public class ChallengeCreator extends Fragment {
         });
 
 
-    }
-
-    public boolean docExists(DocumentReference docRef) {
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if(documentSnapshot.exists()) {
-                    exists = true;
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull @NotNull Exception e) {
-                exists = false;
-            }
-        });
-
-        return exists;
     }
 
     public boolean checkFilledFields() {
@@ -158,9 +143,9 @@ public class ChallengeCreator extends Fragment {
                                 challengeMap.put("title", challengetitle);
                                 challengeMap.put("description", desc);
                                 challengeMap.put("points", points);
-                                challengeMap.put("creator", currentUser);
+                                challengeMap.put("creator", username);
                                 challengeMap.put("challengetype", type);
-                                challengeMap.put("users", Arrays.asList("users/" + fauth.getCurrentUser().getEmail().toString().trim()));
+                                challengeMap.put("users", Arrays.asList(username));
 
                                 if(type == "WALK") {
                                     challengeMap.put("steps", seekBar.getValue());
@@ -168,8 +153,8 @@ public class ChallengeCreator extends Fragment {
 
                                 challenge.set(challengeMap);
 
-                                DocumentReference createdBy = firestore.collection("users").document(currentUser);
-                                createdBy.update("challenges", FieldValue.arrayUnion(challenge));
+                                DocumentReference createdBy = firestore.collection("users").document(username);
+                                createdBy.update("challenges", FieldValue.arrayUnion(challengetitle));
 
                             }
                         }
