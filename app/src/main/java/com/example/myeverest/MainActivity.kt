@@ -13,6 +13,7 @@ import com.example.myeverest.User.Account
 import com.example.myeverest.User.Friends
 import com.example.myeverest.User.Login
 import com.example.myeverest.challenges.ChallengeOverview
+import com.example.myeverest.challenges.LocationMap
 import com.example.myeverest.challenges.Maps
 import com.example.myeverest.challenges.Stepcounter
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -56,7 +57,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.friends_page -> {
-                    switchFragments(Stepcounter())
+                    switchFragments(LocationMap())
                     true
                 }
                 R.id.logout_bar -> {

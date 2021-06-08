@@ -1,5 +1,6 @@
 package com.example.myeverest.User;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -113,7 +114,7 @@ public class Account extends Fragment {
         username = sharedPreferences.getString("username", "failed");
         docRef = firestore.collection("users").document(username);
 
-        mPrename = v.findViewById(R.id.editTextPrename2);
+        mPrename = v.findViewById(R.id.editTextPrename_account);
         mSurname = v.findViewById(R.id.editTextSurname2);
         mAddress = v.findViewById(R.id.editTextTextPostalAddress);
         mBirthdate = v.findViewById(R.id.editTextDate);
