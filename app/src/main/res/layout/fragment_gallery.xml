@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".ui.gallery.GalleryFragment">
 
     <androidx.appcompat.widget.Toolbar
@@ -49,7 +50,7 @@
         android:layout_width="145dp"
         android:layout_height="63dp"
         android:text="@string/user_name"
-        android:textColor="#F2F3F6"
+        android:textColor="@color/background"
         android:textIsSelectable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -76,6 +77,7 @@
         android:layout_width="161dp"
         android:layout_height="38dp"
         android:text="@string/user_name"
+        app:backgroundTint="@color/cold_medium_blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.892"

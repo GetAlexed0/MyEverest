@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.appcompat.widget.Toolbar
@@ -23,12 +24,14 @@
         android:layout_width="117dp"
         android:layout_height="29dp"
         android:text="TextView"
+        android:textColor="@color/cold_dark_blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.163"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.18" />
+
 
     <ImageView
         android:id="@+id/imageView2"
@@ -39,10 +42,8 @@
         app:layout_constraintHorizontal_bias="0.946"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.24000001"
+        app:layout_constraintVertical_bias="0.177"
         tools:srcCompat="@tools:sample/avatars" />
-
-
 
     <ProgressBar
         android:id="@+id/progress_friend"

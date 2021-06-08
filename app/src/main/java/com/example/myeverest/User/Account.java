@@ -29,6 +29,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -51,10 +52,10 @@ import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 
+
 public class Account extends Fragment {
 
-    EditText mPrename, mAddress, mBirthdate, mSurname, mEMail;
-    TextView mUsername;
+    TextView mUsername, mPrename, mAddress, mBirthdate, mSurname, mEMail;
     Button mChangeButton;
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -71,6 +72,7 @@ public class Account extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_account, container, false);
+
     }
 
 
@@ -79,9 +81,7 @@ public class Account extends Fragment {
         super.onActivityCreated(savedInstanceState);
         View v = getView();
 
-
-
-        mPrename = v.findViewById(R.id.editTextPrename2);
+        mPrename = v.findViewById(R.id.editTextPrename_account);
         mSurname = v.findViewById(R.id.editTextSurname2);
         mAddress = v.findViewById(R.id.editTextTextPostalAddress);
         mBirthdate = v.findViewById(R.id.editTextDate);
@@ -118,24 +118,6 @@ public class Account extends Fragment {
         adresse = mAddress.getText().toString().trim();
         geburtsdatum = mBirthdate.getText().toString().trim();
 
-        /*
-        if (snapshot != null && snapshot.exists()) {
-                    Log.d("Account", "Current data: " + snapshot.get("vorname"));
-                    Log.d("Account", "Current data: " + snapshot.get("nachname"));
-                    Log.d("Account", "Current data: " + snapshot.get("adresse"));
-                    Log.d("Account", "Current data: " + snapshot.get("geburtsdatum"));
-                    Log.d("Account", "Current data: " + snapshot.get("email"));
-                    Log.d("Account", "Current data: " + snapshot.get("username"));
-
-                    mPrename.setText(snapshot.get("vorname").toString());
-                    mSurname.setText(snapshot.get("nachname").toString());
-                    mAddress.setText(snapshot.get("adresse").toString());
-                    mBirthdate.setText(snapshot.get("geburtsdatum").toString());
-                    mEMail.setText(snapshot.get("email").toString());
-                } else {
-                    Log.d("Account", "Current data: null");
-                }
-         */
 
                 if(TextUtils.isEmpty(vorname)) {
                     mPrename.setError("Kein Vorname eingegeben");

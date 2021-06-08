@@ -12,4 +12,8 @@
     <color name="yellow">#e9c46a</color>
     <color name="orange">#f4a261</color>
     <color name="red">#e76f51</color>
+    <color name="cold_light_blue">#B8D8D8</color>
+    <color name="cold_medium_blue">#7a9e9f</color>
+    <color name="cold_dark_blue">#4f6367</color>
+    <color name="background">#eef5db</color>
 </resources>

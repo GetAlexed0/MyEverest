@@ -4,15 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/background_mountains"
     tools:context=".RecycleView.Insta">
 
     <ListView
         android:id="@+id/listView"
         android:layout_width="409dp"
         android:layout_height="729dp"
-        android:background="#C3B7B7"
         android:divider="@android:color/transparent"
         android:dividerHeight="20dp"
+        android:background="@color/background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

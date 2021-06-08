@@ -9,6 +9,7 @@
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/background"
         app:layout_anchor="@+id/constraintLayout"
         app:layout_anchorGravity="center">
 
@@ -25,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_marginBottom="731dp"
-                android:src="@color/purple_700"
+                android:background="@mipmap/berge_app"
                 android:visibility="visible" />
 
             <TextView
@@ -35,7 +36,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="50dp"
                 android:text="@string/user_name"
-                android:textColor="?attr/colorOnSecondary"
+                android:textColor="@color/background"
                 android:textSize="20sp" />
 
             <ImageView
@@ -48,167 +49,138 @@
 
         </FrameLayout>
 
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Vorname"
-            android:textStyle="bold"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/prename_account"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="139dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginEnd="250dp"
+            android:layout_marginRight="250dp"
+            android:hint="Vorname "
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.045"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.547" />
+            app:layout_constraintVertical_bias="0.61">
 
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="birthdate"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.039"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.679" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextPrename_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-        <EditText
-            android:id="@+id/editTextTextPostalAddress"
-            android:layout_width="199dp"
-            android:layout_height="45dp"
-            android:ems="10"
-            android:hint="address_hint"
-            android:inputType="textPostalAddress"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.066"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.896" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/editTextDate"
-            android:layout_width="85dp"
-            android:layout_height="45dp"
-            android:ems="10"
-            android:hint="birthdate_hint"
-            android:inputType="date"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.042"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.752" />
-
-        <EditText
-            android:id="@+id/editTextPrename2"
-            android:layout_width="145dp"
-            android:layout_height="45dp"
-            android:ems="10"
-            android:hint="Vorname"
-            android:inputType="textPersonName"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.06"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/frameLayout"
-            app:layout_constraintVertical_bias="0.619" />
-
-        <TextView
-            android:id="@+id/textView10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="address"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.038"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.811" />
-
-        <TextView
-            android:id="@+id/textView11"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="mail"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.596"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.679" />
-
-        <EditText
-            android:id="@+id/editTextEmailAddress"
-            android:layout_width="151dp"
-            android:layout_height="45dp"
-            android:ems="10"
-            android:hint="mail_hint"
-            android:inputType="textEmailAddress"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/surname_account"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="139dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="250dp"
+            android:layout_marginLeft="250dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:hint="Nachname"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.88"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.752" />
+            app:layout_constraintVertical_bias="0.61">
 
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="411dp"
-            android:layout_height="163dp"
-            android:fillViewport="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.352">
-
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextSurname2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-        </androidx.core.widget.NestedScrollView>
+                android:layout_height="wrap_content" />
 
-        <EditText
-            android:id="@+id/editTextSurname2"
-            android:layout_width="170dp"
-            android:layout_height="45dp"
-            android:ems="10"
-            android:hint="Nachname"
-            android:inputType="textPersonName"
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/date_account"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="146dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="250dp"
+            android:layout_marginLeft="250dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:hint="Geburtstag"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.95"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.619" />
+            app:layout_constraintVertical_bias="0.77"
+            tools:ignore="DuplicateIds">
 
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Nachname"
-            android:textStyle="bold"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/mail_account"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="146dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginEnd="250dp"
+            android:layout_marginRight="250dp"
+            android:hint="E-Mail Adresse"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.667"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.547" />
+            app:layout_constraintVertical_bias="0.76">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextEmailAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/address_account"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="146dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginEnd="250dp"
+            android:layout_marginRight="250dp"
+            android:hint="Adresse"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.12"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.89">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextTextPostalAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
 
         <Button
             android:id="@+id/setUserAttributes_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Speichern"
+            app:backgroundTint="@color/red"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.708"
+            app:layout_constraintHorizontal_bias="0.818"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.896" />
