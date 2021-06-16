@@ -6,8 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.SharedPreferences;
 import android.nfc.Tag;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +44,7 @@ import java.util.List;
 public class Insta extends Fragment {
 
     ArrayList<String> liste = new ArrayList<String>();
+    String username;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -58,10 +61,13 @@ public class Insta extends Fragment {
         FirebaseFirestore firestore;
         DocumentReference doc_ref;
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        username = sharedPreferences.getString("username", "failed");
+
         View v = getView();
         firestore = FirebaseFirestore.getInstance();
         fAuth = FirebaseAuth.getInstance();
-        doc_ref = firestore.collection("users").document(fAuth.getCurrentUser().getEmail());
+        doc_ref = firestore.collection("users").document(username);
 
         ListView listView = v.findViewById(R.id.listView);
         doc_ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -72,11 +78,14 @@ public class Insta extends Fragment {
 
                     if(document.exists()) {
                         List<String> freunde = (List<String>) document.get("friends");
+
                         for(int i = 0; i < freunde.size(); i++) {
                             liste.add(freunde.get(i));
-                            ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, liste);
-                            listView.setAdapter(itemsAdapter);
                         }
+                        ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, freunde);
+                        listView.setAdapter(itemsAdapter);
+
+
                         for(int i = 0; i < liste.size(); i++) {
                             Log.d("Ausgabe", liste.get(i));
                         }
