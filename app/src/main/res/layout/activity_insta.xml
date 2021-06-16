@@ -6,17 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".RecycleView.Insta">
 
-    <ListView
-        android:id="@+id/listView"
-        android:layout_width="407dp"
-        android:layout_height="474dp"
-        android:background="@color/background"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="20dp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleTest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </ListView>
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

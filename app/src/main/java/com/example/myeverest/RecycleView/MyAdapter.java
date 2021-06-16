@@ -1,68 +1,78 @@
 package com.example.myeverest.RecycleView;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.media.Image;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myeverest.Helpers.CustomAdapter;
+import com.example.myeverest.R;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
-
-    Context context;
-    ArrayList<User> list;
-
-    public MyAdapter(Context context, ArrayList<User> list) {
-        this.context = context;
-        this.list = list;
-    }
-
-   /* @NonNull
-    @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-       // View v = LayoutInflater.from(context).inflate(R.layout.item,parent,false);
-        return  new MyViewHolder(get);
-    }*/
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+    private List<String> localDataStrings;
+    private List<Bitmap> localDataImages;
 
     @NonNull
     @NotNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        return null;
+    public MyAdapter.ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.text_row_item, parent, false);
+
+        return new ViewHolder(view);
+    }
+
+    public MyAdapter(List<String> localDataStrings, List<Bitmap> localDataImages) {
+        this.localDataImages = localDataImages;
+        this.localDataStrings = localDataStrings;
+    }
+
+    public String getStringAtPosition(int pos) {
+        return localDataStrings.get(pos);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-
-        User user = list.get(position);
-        holder.firstName.setText(user.getFirstName());
-        holder.lastName.setText(user.getLastName());
-        //holder.age.setText(user.getAge());
-
+    public void onBindViewHolder(@NonNull @NotNull MyAdapter.ViewHolder holder, int position) {
+        holder.getTextView().setText(localDataStrings.get(position));
+        holder.getImageView().setImageBitmap(localDataImages.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return localDataStrings.size();
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView firstName, lastName; //age ist auch weg
+        private final TextView textView;
+        private final ImageView imageView;
 
-        public MyViewHolder(@NonNull View itemView) {
-            super(itemView);
+        public ViewHolder(@NonNull @NotNull View view) {
+            super(view);
 
-            //firstName = itemView.findViewById(R.id.tvfirstName);
-            //lastName = itemView.findViewById(R.id.tvlastName);
-            //age = itemView.findViewById(R.id.tvage);
+            textView = (TextView) view.findViewById(R.id.textViewRecycle);
+            imageView = (ImageView) view.findViewById(R.id.imageViewRecycle);
+        }
 
+        public TextView getTextView() {
+            return textView;
+        }
+
+        public ImageView getImageView() {
+            return imageView;
         }
     }
+
 
 }

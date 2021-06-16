@@ -3,10 +3,19 @@ package com.example.myeverest.RecycleView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -20,6 +29,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.example.myeverest.Helpers.CustomAdapter;
 import com.example.myeverest.R;
 import com.example.myeverest.User.Friends;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -69,7 +79,6 @@ public class Insta extends Fragment {
         fAuth = FirebaseAuth.getInstance();
         doc_ref = firestore.collection("users").document(username);
 
-        ListView listView = v.findViewById(R.id.listView);
         doc_ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
@@ -79,12 +88,32 @@ public class Insta extends Fragment {
                     if(document.exists()) {
                         List<String> freunde = (List<String>) document.get("friends");
 
+
                         for(int i = 0; i < freunde.size(); i++) {
                             liste.add(freunde.get(i));
                         }
-                        ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, freunde);
-                        listView.setAdapter(itemsAdapter);
+                        //ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, freunde);
+                        List<Bitmap> bitlist = new ArrayList<Bitmap>();
+                        for(int i = 0; i < liste.size(); i++) {
+                            bitlist.add(BitmapFactory.decodeResource(getResources(), R.drawable.test));
+                        }
 
+                        MyAdapter customAdapter = new MyAdapter(liste, bitlist);
+                        RecyclerView listView = v.findViewById(R.id.recycleTest);
+                        listView.setLayoutManager(new LinearLayoutManager(getContext()));
+                        listView.setAdapter(customAdapter);
+
+                        listView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), listView, new RecyclerItemClickListener.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                Log.d("Ausgabe", customAdapter.getStringAtPosition(position));
+                            }
+
+                            @Override
+                            public void onLongItemClick(View view, int position) {
+
+                            }
+                        }));
 
                         for(int i = 0; i < liste.size(); i++) {
                             Log.d("Ausgabe", liste.get(i));
@@ -98,26 +127,15 @@ public class Insta extends Fragment {
             }
         });
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String position_friend;
-
-                Log.d("Liste_Freunde", liste.get(position));
-                position_friend = liste.get(position);
-
-                Bundle args = new Bundle();
-                args.putString("username_friend",liste.get(position));
-
-                Fragment friends = new Friends();
-
-                friends.setArguments(args);
-                final FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.replace(R.id.fragmentContainerView, friends, "Freunde");
-                ft.commit();
-            }
-        });
 
 }
 
+    public static Bitmap createImage(int width, int height, int color) {
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Paint paint = new Paint();
+        paint.setColor(color);
+        canvas.drawRect(0F, 0F, (float) width, (float) height, paint);
+        return bitmap;
+    }
 }

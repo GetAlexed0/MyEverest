@@ -41,4 +41,5 @@
     <string name="passwort_vergessen"> <u> Passwort vergessen? </u></string>
     <string name="account_schon_vorhanden_hier_einloggen">Account schon vorhanden? <u>Hier Einloggen!</u></string>
     <string name="username" />
+    <string name="element_text">ReclyerElementText</string>
 </resources>

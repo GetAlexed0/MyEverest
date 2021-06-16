@@ -51,7 +51,7 @@ public class Userlist extends AppCompatActivity {
         });
 
         list = new ArrayList<>();
-        myAdapter = new MyAdapter(this,list);
+        //myAdapter = new MyAdapter(this,list);
         recyclerView.setAdapter(myAdapter);
 
 
