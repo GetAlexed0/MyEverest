@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.myeverest">
 
     <!--
@@ -45,7 +46,6 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".RecycleView.Userlist" />
-        <activity android:name=".RecycleView.Insta"></activity>
         <activity
             android:name=".ui.StartingActivity"
             android:theme="@android:style/Theme.NoDisplay">
@@ -55,14 +55,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".challenges.ChallengeCreator" />
-        <activity android:name=".User.Account" />
+        <activity android:name=".challenges.ChallengeCreator"
+            tools:ignore="Instantiatable" />
+        <activity android:name=".User.Account"
+            tools:ignore="Instantiatable" />
 
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".challenges.Stepcounter" />
+        <activity android:name=".challenges.Stepcounter"
+            tools:ignore="Instantiatable" />
         <activity android:name=".User.Login" />
         <activity android:name=".User.Register" />
         <activity

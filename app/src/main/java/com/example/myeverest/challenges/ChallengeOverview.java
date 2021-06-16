@@ -166,6 +166,8 @@ public class ChallengeOverview extends Fragment {
                         switchFragments(individualFragment);
                         return true;
 
+
+
                     default:
                         return false;
                 }

@@ -1,6 +1,7 @@
 package com.example.myeverest.User;
 
 import android.Manifest;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.os.Environment;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -24,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -69,6 +72,7 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -78,13 +82,13 @@ import static android.app.Activity.RESULT_OK;
 public class Account extends Fragment {
 
     TextView mUsername, mPrename, mAddress, mBirthdate, mSurname, mEMail;
-
     TextView currentLvl, progressAbsolute;
     Button mChangeButton;
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     String vorname, nachname, adresse, geburtsdatum, username;
     ProgressBar lvlBar;
+    private String monthString,dayString,yearString;
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -147,6 +151,7 @@ public class Account extends Fragment {
 
     }
 
+
     public void changeData() {
 
         vorname = mPrename.getText().toString().trim();
@@ -168,7 +173,7 @@ public class Account extends Fragment {
                     return;
                 }
 
-        docRef.update("nachname", nachname);
+                docRef.update("nachname", nachname);
 
 
                 if(TextUtils.isEmpty(adresse)) {

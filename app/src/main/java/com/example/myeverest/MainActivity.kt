@@ -9,6 +9,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import com.example.myeverest.Helpers.CallBack
 import com.example.myeverest.Helpers.DataHandler
 import com.example.myeverest.Helpers.DatabaseHandler
+import com.example.myeverest.RecycleView.Insta
 import com.example.myeverest.User.Account
 import com.example.myeverest.User.Friends
 import com.example.myeverest.User.Login
@@ -57,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.friends_page -> {
-                    switchFragments(LocationMap())
+                    switchFragments(Insta())
                     true
                 }
                 R.id.logout_bar -> {

@@ -52,8 +52,8 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/prename_account"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="139dp"
-            android:layout_height="50dp"
+            android:layout_width="151dp"
+            android:layout_height="67dp"
             android:layout_marginStart="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginEnd="250dp"
@@ -76,7 +76,7 @@
             android:id="@+id/surname_account"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="139dp"
-            android:layout_height="50dp"
+            android:layout_height="67dp"
             android:layout_marginStart="250dp"
             android:layout_marginLeft="250dp"
             android:layout_marginEnd="20dp"
@@ -101,7 +101,7 @@
             android:id="@+id/date_account"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="146dp"
-            android:layout_height="50dp"
+            android:layout_height="67dp"
             android:layout_marginStart="250dp"
             android:layout_marginLeft="250dp"
             android:layout_marginEnd="20dp"
@@ -126,7 +126,7 @@
             android:id="@+id/mail_account"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="146dp"
-            android:layout_height="50dp"
+            android:layout_height="67dp"
             android:layout_marginStart="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginEnd="250dp"
@@ -150,7 +150,7 @@
             android:id="@+id/address_account"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="146dp"
-            android:layout_height="50dp"
+            android:layout_height="80dp"
             android:layout_marginStart="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginEnd="250dp"
@@ -161,7 +161,7 @@
             app:layout_constraintHorizontal_bias="0.12"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.89">
+            app:layout_constraintVertical_bias="0.92">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextTextPostalAddress"
@@ -200,7 +200,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/frameLayout"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.021" />
 
         <TextView
             android:layout_width="wrap_content"
