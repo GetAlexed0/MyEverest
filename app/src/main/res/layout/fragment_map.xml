@@ -10,58 +10,30 @@
 
     <FrameLayout
         android:id="@+id/frame_layout"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:textColorHint="@color/cold_dark_blue"
+        android:layout_width="411dp"
+        android:layout_height="347dp"
         android:textColor="@color/cold_dark_blue"
+        android:textColorHint="@color/cold_dark_blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.114" />
-
-    <EditText
-        android:id="@+id/coordLat"
-        android:layout_width="137dp"
-        android:layout_height="47dp"
-        android:ems="10"
-        android:inputType="number"
-        android:textColorHint="@color/cold_dark_blue"
-        android:textColor="@color/cold_dark_blue"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.437"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frame_layout"
-        app:layout_constraintVertical_bias="0.63" />
+        app:layout_constraintVertical_bias="0.278" />
 
     <Button
-        android:id="@+id/setLocation_btn"
+        android:id="@+id/create_location_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="setLocation"
         app:backgroundTint="@color/red"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.96"
+        app:layout_constraintHorizontal_bias="0.84"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.81" />
+        app:layout_constraintVertical_bias="0.87" />
 
-
-    <Button
-        android:id="@+id/showLocation_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="SHOW"
-        app:backgroundTint="@color/cold_dark_blue"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.922"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frame_layout"
-        app:layout_constraintVertical_bias="0.713" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/coordinate_textfield"
@@ -71,25 +43,87 @@
         android:ellipsize="start"
         android:gravity="center_horizontal"
         android:hint="Aktuelle Koordinaten"
-        android:textColorHint="@color/cold_dark_blue"
         android:textColor="@color/cold_dark_blue"
+        android:textColorHint="@color/cold_dark_blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.43"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.73">
+        app:layout_constraintVertical_bias="0.75">
 
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/inputCoordinates"
             android:layout_width="match_parent"
-            android:textColorHint="@color/cold_dark_blue"
-            android:textColor="@color/cold_dark_blue"
             android:layout_height="match_parent"
             android:ellipsize="start"
+            android:focusable="false"
             android:gravity="center_horizontal"
-            android:focusable="false"/>
+            android:textColor="@color/cold_dark_blue"
+            android:textColorHint="@color/cold_dark_blue" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/title_textfield"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="start"
+        android:gravity="center_horizontal"
+        android:hint="Challenge-Titel"
+        android:textColor="@color/cold_dark_blue"
+        android:textColorHint="@color/cold_dark_blue"
+        app:counterEnabled="true"
+        app:counterMaxLength="30"
+        app:helperText="Maximale Zeichen:"
+        app:helperTextEnabled="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.01999998">
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/title_input"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:autoSizeTextType="uniform"
+            android:ellipsize="start"
+            android:gravity="center_horizontal"
+            android:inputType="textMultiLine"
+            android:textColor="@color/cold_dark_blue"
+            android:textColorHint="@color/cold_dark_blue" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textField"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="start"
+        android:gravity="center_horizontal"
+        android:hint="Punktzahl"
+        android:textColor="@color/cold_dark_blue"
+        android:textColorHint="@color/cold_dark_blue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.18"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.88">
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/points_input"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:digits="0123456789"
+            android:ellipsize="start"
+            android:gravity="center_horizontal"
+            android:inputType="numberDecimal"
+            android:textColor="@color/cold_dark_blue"
+            android:textColorHint="@color/cold_dark_blue" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

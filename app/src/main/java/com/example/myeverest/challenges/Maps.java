@@ -2,15 +2,18 @@ package com.example.myeverest.challenges;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,21 +29,34 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Maps extends Fragment implements OnMapReadyCallback {
 
     private FusedLocationProviderClient fusedLocationClient;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    TextView titleInput, pointInput, descriptionInput;
     Button setButton, showButton;
-    TextInputEditText coordLong;
+    static TextInputEditText coordLong;
     GoogleMap gMap;
     LatLng position;
+    String username;
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private static Location lastknown;
 
@@ -64,7 +80,11 @@ public class Maps extends Fragment implements OnMapReadyCallback {
         super.onActivityCreated(savedInstanceState);
         View v = getView();
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        username = sharedPreferences.getString("username", "failed");
         coordLong = v.findViewById(R.id.inputCoordinates);
+        titleInput = v.findViewById(R.id.title_input);
+        pointInput = v.findViewById(R.id.points_input);
         getLastKnownLocation();
         MapsFragment.setLocation(getLastKnownLocation());
 
@@ -77,28 +97,34 @@ public class Maps extends Fragment implements OnMapReadyCallback {
         coordLong.setText(String.valueOf(lastknown.getLatitude() + " : " + lastknown.getLongitude()));
         //Mapfragment initialisieren
         Fragment fragment = new MapsFragment();
-        setButton = v.findViewById(R.id.setLocation_btn);
+        setButton = v.findViewById(R.id.create_location_btn);
         showButton = v.findViewById(R.id.showLocation_btn);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         setButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MarkerOptions marker = MapsFragment.getOptions();
-                if(marker != null) {
-                    lastknown.setLongitude(marker.getPosition().longitude);
-                    lastknown.setLatitude(marker.getPosition().latitude);
+                if (!titleInput.getText().toString().isEmpty()) {
+                    if (!pointInput.getText().toString().isEmpty()) {
+                        MarkerOptions marker = MapsFragment.getOptions();
+                        if (marker != null) {
+                            lastknown.setLongitude(marker.getPosition().longitude);
+                            lastknown.setLatitude(marker.getPosition().latitude);
+                            createChallenge(lastknown);
+                        } else {
+                            createChallenge(lastknown);
+                        }
+                    }
+                    else {
+                        pointInput.setError("Willst du keine Punkte?");
+                    }
                 }
-                coordLong.setText(String.valueOf(round(lastknown.getLatitude(), 12)) + " : " + String.valueOf(round(lastknown.getLongitude(),12)));
+                else {
+                    titleInput.setError("Du musst schon einen Titel eingeben ;)");
+                }
             }
         });
 
-        showButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
         //Fragment öffnen
         getFragmentManager().beginTransaction()
                 .replace(R.id.frame_layout, fragment).commit();
@@ -106,6 +132,15 @@ public class Maps extends Fragment implements OnMapReadyCallback {
 
 
 
+    }
+
+    public static void updateCoordinateText() {
+        MarkerOptions marker = MapsFragment.getOptions();
+        if(marker != null) {
+            lastknown.setLongitude(marker.getPosition().longitude);
+            lastknown.setLatitude(marker.getPosition().latitude);
+            coordLong.setText(String.valueOf(lastknown.getLatitude() + " : " + lastknown.getLongitude()));
+        }
     }
 
     private Location getLastKnownLocation() {
@@ -157,5 +192,41 @@ public class Maps extends Fragment implements OnMapReadyCallback {
         return bd.doubleValue();
     }
 
+    public void createChallenge(Location loc) {
+        String challengetitle = titleInput.getText().toString().trim();
+        DocumentReference challenge = firestore.collection("challenges").document(challengetitle);
+        challenge.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    if(doc.exists()) {
+                        //Wenn Challenge schon existiert
+                        titleInput.setError("Der Titel ist leider vergeben, versuch es doch mal mit einem anderen :)");
+                    }
+
+                    else {
+                        int points = Integer.parseInt(pointInput.getText().toString().trim());
+                        Map<String, Object> challengeMap = new HashMap<>();
+                        challengeMap.put("title", challengetitle);
+                        challengeMap.put("description", "");
+                        challengeMap.put("points", points);
+                        challengeMap.put("creator", username);
+                        challengeMap.put("challengetype", "LOCATION");
+                        challengeMap.put("users", Arrays.asList(username));
+                        challengeMap.put("type", "LOCATION");
+                        GeoPoint point = new GeoPoint(loc.getLatitude(), loc.getLongitude());
+                        challengeMap.put("position", point);
+
+                        challenge.set(challengeMap);
+
+                        DocumentReference createdBy = firestore.collection("users").document(username);
+                        createdBy.update("challenges", FieldValue.arrayUnion(challengetitle));
+
+                    }
+                }
+            }
+        });
+    }
 
 }

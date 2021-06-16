@@ -3,6 +3,7 @@ package com.example.myeverest.challenges;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -144,8 +145,8 @@ public class ChallengeCreator extends Fragment {
                                 challengeMap.put("description", desc);
                                 challengeMap.put("points", points);
                                 challengeMap.put("creator", username);
-                                challengeMap.put("challengetype", type);
                                 challengeMap.put("users", Arrays.asList(username));
+                                challengeMap.put("type", type);
 
                                 if(type == "WALK") {
                                     challengeMap.put("steps", seekBar.getValue());
@@ -155,6 +156,13 @@ public class ChallengeCreator extends Fragment {
 
                                 DocumentReference createdBy = firestore.collection("users").document(username);
                                 createdBy.update("challenges", FieldValue.arrayUnion(challengetitle));
+
+                                Fragment individualFragment = new ChallengePage();
+                                Bundle individualArguments = new Bundle();
+                                individualArguments.putString("type", type);
+                                individualArguments.putString("title", challengetitle);
+                                individualFragment.setArguments(individualArguments);
+                                switchFragments(individualFragment);
 
                             }
                         }
@@ -183,5 +191,11 @@ public class ChallengeCreator extends Fragment {
                 }
             }
         });
+    }
+
+    private void switchFragments(Fragment fragment) {
+        final FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.fragmentContainerView, fragment, "TAG");
+        ft.commit();
     }
 }

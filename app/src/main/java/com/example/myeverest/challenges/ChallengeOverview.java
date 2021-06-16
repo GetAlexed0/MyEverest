@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
@@ -113,6 +114,11 @@ public class ChallengeOverview extends Fragment {
                 if(task.isSuccessful()) {
                     DocumentSnapshot snapshot = task.getResult();
                     if(snapshot.exists()) {
+                        List<String> list = (List) snapshot.get("users");
+                        if(list.contains(username)) {
+                            titleInput.setError("Du bist bereits in dieser Challenge angemeldet");
+                            return;
+                        }
                         challengeDoc.update("users", FieldValue.arrayUnion(username));
                         userDoc.update("challenges", FieldValue.arrayUnion(challengeTitle));
                         refreshChallenges();
@@ -138,10 +144,24 @@ public class ChallengeOverview extends Fragment {
                 }
                 ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(getContext(), layout.simple_list_item_1, list);
                 listView.setAdapter(adapter);
-
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String type = data.get(position).get("type").toString();
+                        if(!type.isEmpty()) {
+                            Fragment challengePage = new ChallengePage();
+                            Bundle arguments = new Bundle();
+                            arguments.putString("type", type);
+                            arguments.putString("title", data.get(position).get("title").toString());
+                            challengePage.setArguments(arguments);
+                            switchFragments(challengePage);
+                            }
+                    }
+                });
             }
         }, username);
     }
+
     private void showMenu(View v) {
         PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -184,24 +204,6 @@ public class ChallengeOverview extends Fragment {
         ft.replace(R.id.fragmentContainerView, fragment, "TAG");
         ft.commit();
     }
-
-    /*public void createList() {
-        checkAnswerSubmission(new CallBack<List<DocumentSnapshot>>() {
-            @Override
-            public void callback(List<DocumentSnapshot> data) {
-                DocumentSnapshot doc = data.get(0);
-                Map<String, Object> map = doc.getData().get("challenges");
-
-               for(Map.Entry<String, Object> entry : map.entrySet()) {
-                   if(entry.getKey().equals("challenges")) {
-
-                   }
-               }
-                ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(getContext(), layout.simple_list_item_1, list);
-                listView.setAdapter(adapter);
-            }
-        });
-    }*/
 
 
     private void checkAnswerSubmission(@NonNull CallBack<List<DocumentSnapshot>> finishedCallback, String getting) {

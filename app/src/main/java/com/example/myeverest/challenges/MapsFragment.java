@@ -75,6 +75,7 @@ public class MapsFragment extends Fragment {
                         location.setLongitude(latLng.longitude);
 
                         options = markerOptions;
+                        Maps.updateCoordinateText();
 
                     }
                 });

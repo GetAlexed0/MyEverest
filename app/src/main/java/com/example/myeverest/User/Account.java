@@ -82,7 +82,7 @@ import static android.app.Activity.RESULT_OK;
 public class Account extends Fragment {
 
     TextView mUsername, mPrename, mAddress, mBirthdate, mSurname, mEMail;
-    TextView currentLvl, progressAbsolute;
+    TextView currentLvl, progressAbsolute, stepCount;
     Button mChangeButton;
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -100,7 +100,7 @@ public class Account extends Fragment {
     private Uri imageUri;
     private FirebaseStorage storage;
     private StorageReference storageReference;
-    DocumentReference docRef = firestore.collection("users").document(fAuth.getCurrentUser().getEmail());
+    DocumentReference docRef;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -129,6 +129,7 @@ public class Account extends Fragment {
         lvlBar = v.findViewById(R.id.lvlbar);
         currentLvl = v.findViewById(R.id.currentlvl);
         progressAbsolute = v.findViewById(R.id.progressabsolute);
+        stepCount = v.findViewById(R.id.steps_account);
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -221,6 +222,7 @@ public class Account extends Fragment {
                         currentLvl.setText(String.valueOf(getLevel(test)));
                         lvlBar.setProgress((int) (getProgressToNextLevel(test, true)*100));
                         progressAbsolute.setText(String.valueOf((int) (getProgressToNextLevel(test, false))) + "\n Punkte bis " + String.valueOf(getLevel(test)+1));
+                        stepCount.setText("Schritte gesamt: " + String.valueOf(snapshot.get("steps")));
 
                         if(snapshot.get("profilePic") != null) {
                             loadUserImage(getView(), snapshot.get("profilePic").toString());
@@ -313,21 +315,6 @@ public class Account extends Fragment {
     }
 
     public void loadUserImage(View v, String imageUrl) {
-        /*Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ImageView i = (ImageView) v.findViewById(R.id.profilePic);
-                    Bitmap bitmap = BitmapFactory.decodeStream((InputStream)new URL(imageUrl).getContent());
-                    i.setImageBitmap(bitmap);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    thread.start();*/
         new DownloadImageFromInternet((ImageView) v.findViewById(R.id.profilePic)).execute(imageUrl);
     }
     private static int getLevel(int xp) {

@@ -22,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +34,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.jetbrains.annotations.NotNull;
@@ -42,19 +44,18 @@ public class Stepcounter extends Fragment implements SensorEventListener {
     SensorManager sManager;
     TextView stepText;
     ProgressBar stepBar;
-    Button stepButton;
-    Button resetButton;
+    Button stepButton, resetButton;
+    Bundle arguments;
 
 
     boolean running = false;
     private long steps = 0;
+    private long goalsteps;
     String challengeID, username;
 
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     DocumentReference userDoc;
-    DocumentReference challengeDoc;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,6 +74,9 @@ public class Stepcounter extends Fragment implements SensorEventListener {
             requestPermissions(new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, 19);
         }
 
+        arguments = getArguments();
+        goalsteps = (long) arguments.getDouble("steps");
+
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         username = sharedPreferences.getString("username", "failed");
         userDoc = firestore.collection("users").document(username);
@@ -89,7 +93,14 @@ public class Stepcounter extends Fragment implements SensorEventListener {
             public void onClick(View v) {
                 steps++;
                 stepText.setText("Schritte: " + steps);
+                userDoc.update("steps", FieldValue.increment(1));
                 stepBar.setProgress((int) steps);
+                if(steps >= goalsteps) {
+                    Fragment frag = getFragmentManager().findFragmentById(R.id.fragmentContainerView);
+                    ImageView cancel = frag.getView().findViewById(R.id.cancelButton);
+                    cancel.setVisibility(View.INVISIBLE);
+                }
+
             }
         });
 
@@ -104,7 +115,7 @@ public class Stepcounter extends Fragment implements SensorEventListener {
             }
         });
 
-        stepBar.setMax(300);
+        stepBar.setMax((int) goalsteps);
     }
 
     @Override
@@ -114,36 +125,7 @@ public class Stepcounter extends Fragment implements SensorEventListener {
         stepSensor = sManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
         stepBar.setIndeterminate(false);
 
-        userDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
 
-                    if(document.exists()) {
-                        if(document.get("steps") != null) {
-                            Object i = document.get("steps");
-                            steps = (long) i;
-                            stepText.setText("Schritte: " + steps);
-                            stepBar.setProgress((int) steps);
-                        }
-
-                        else {
-                            userDoc.update("steps", 0);
-                            steps = 0;
-                        }
-                    }
-
-                    else {
-                        System.out.println("Document nicht existent");
-                        System.out.println(currentUser.getEmail());
-                    }
-                }
-                else {
-                    System.out.println("get failed with "+ task.getException());
-                }
-            }
-        });
         if(stepSensor == null) {
             Toast.makeText(getActivity(), "No Sensor detected", Toast.LENGTH_SHORT).show();
         }
@@ -158,17 +140,14 @@ public class Stepcounter extends Fragment implements SensorEventListener {
         super.onPause();
         running = false;
         sManager.unregisterListener(this);
-        userDoc.update("steps", steps);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         sManager.unregisterListener(this, stepSensor);
-        userDoc.update("steps", steps);
-
-
     }
+
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -176,17 +155,18 @@ public class Stepcounter extends Fragment implements SensorEventListener {
         if(running) {
             steps++;
             stepText.setText("Schritte: " + steps);
+            userDoc.update("steps", FieldValue.increment(1));
             stepBar.setProgress((int) steps);
 
+            if(steps >= goalsteps) {
+                ImageView cancel = getParentFragment().getView().findViewById(R.id.cancelButton);
+                cancel.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
-    }
-
-    public void finishChallenge() {
-        //TODO
     }
 }

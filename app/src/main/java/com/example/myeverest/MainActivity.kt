@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.map_page -> {
                     //Fragment öffnen
-                    switchFragments(Maps())
+                    switchFragments(LocationMap())
 
                     true
                 }
