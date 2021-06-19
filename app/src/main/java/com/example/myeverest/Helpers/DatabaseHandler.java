@@ -1,5 +1,7 @@
 package com.example.myeverest.Helpers;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -15,8 +17,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class DatabaseHandler {
 
@@ -30,7 +37,13 @@ public class DatabaseHandler {
                     DocumentSnapshot document = task.getResult();
 
                     if (document.exists()) {
-                        finishedCallback.callback(document);
+                        try {
+                            finishedCallback.callback(document);
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         Log.d("Testcallback", "In der if");
                     } else {
                         Log.d("Testcallback", "In der else");

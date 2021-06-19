@@ -34,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class ChallengeCreator extends Fragment {
 
@@ -180,7 +181,13 @@ public class ChallengeCreator extends Fragment {
                     DocumentSnapshot document = task.getResult();
 
                     if (document.exists()) {
-                        finishedCallback.callback(document);
+                        try {
+                            finishedCallback.callback(document);
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         Log.d("Testcallback", "In der if");
                     } else {
                         Log.d("Testcallback", "In der else");

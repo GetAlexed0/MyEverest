@@ -337,7 +337,7 @@ public class Account extends Fragment {
 
 
 
-    private class DownloadImageFromInternet extends AsyncTask<String, Void, Bitmap> {
+    public class DownloadImageFromInternet extends AsyncTask<String, Void, Bitmap> {
         ImageView imageView;
         public DownloadImageFromInternet(ImageView imageView) {
             this.imageView=imageView;

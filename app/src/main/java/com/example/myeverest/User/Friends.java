@@ -12,7 +12,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,12 +23,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.myeverest.Helpers.CallBack;
+import com.example.myeverest.Helpers.DatabaseHandler;
 import com.example.myeverest.R;
+import com.example.myeverest.challenges.ChallengePage;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -33,11 +40,14 @@ import com.google.firebase.storage.StorageReference;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Friends extends Fragment {
 
     TextView mUsername, mPrename, mSurname;
-    String username;
+    String username, loggedUser;
+    ListView listView;
     ImageView mProfilePic;
     private ImageView profilePic;
     private Uri imageUri;
@@ -63,8 +73,13 @@ public class Friends extends Fragment {
        Bundle args = getArguments();
        username = args.getString("username_friend");
 
-       docRef = firestore.collection("users").document(username);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        loggedUser = sharedPreferences.getString("username", "failed");
 
+
+        docRef = firestore.collection("users").document(username);
+
+       listView = v.findViewById(R.id.listView_friends);
         mProfilePic = v.findViewById(R.id.profilePic_friends);
         mUsername = v.findViewById(R.id.textViewUsername_friends);
         mPrename = v.findViewById(R.id.textViewPrename_friends);
@@ -95,6 +110,8 @@ public class Friends extends Fragment {
                         if(snapshot.get("profilePic") != null) {
                             loadUserImage(getView(), snapshot.get("profilePic").toString());
                         }
+
+                        refreshFriends();
                     }
                 }
             }
@@ -106,6 +123,28 @@ public class Friends extends Fragment {
         new DownloadImageFromInternet((ImageView) v.findViewById(R.id.profilePic_friends)).execute(imageUrl);
     }
 
+    public void refreshFriends() {
+        DatabaseHandler.checkAnswerSubmission(new CallBack<DocumentSnapshot>() {
+            @Override
+            public void callback(DocumentSnapshot data) {
+                List<String> list = (List<String>) data.get("challenges");
+                if(list != null) {
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, list);
+                    listView.setAdapter(adapter);
+                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            String challenge = list.get(position);
+                            if (!challenge.isEmpty()) {
+                                firestore.collection("users").document(loggedUser).update("challenges", FieldValue.arrayUnion(challenge));
+                                firestore.collection("challenges").document(challenge).update("users", FieldValue.arrayUnion(loggedUser));
+                            }
+                        }
+                    });
+                }
+            }
+        }, "users", username);
+    }
 
     private class DownloadImageFromInternet extends AsyncTask<String, Void, Bitmap> {
 

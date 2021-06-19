@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class ChallengeOverview extends Fragment {
 // WICHTIG: Username variabel lassen damit wechsel möglich sind! Am besten per Parameter mitgeben
@@ -122,6 +123,7 @@ public class ChallengeOverview extends Fragment {
                         challengeDoc.update("users", FieldValue.arrayUnion(username));
                         userDoc.update("challenges", FieldValue.arrayUnion(challengeTitle));
                         refreshChallenges();
+                        titleInput.setText("");
                     }
 
                     else {
@@ -217,7 +219,13 @@ public class ChallengeOverview extends Fragment {
                     for(QueryDocumentSnapshot document : task.getResult()) {
                         list.add(document);
                     }
-                    finishedCallback.callback(list);
+                    try {
+                        finishedCallback.callback(list);
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
