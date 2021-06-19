@@ -9,6 +9,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import com.example.myeverest.Helpers.CallBack
 import com.example.myeverest.Helpers.DataHandler
 import com.example.myeverest.Helpers.DatabaseHandler
+import com.example.myeverest.RecycleView.FriendList
 import com.example.myeverest.RecycleView.Insta
 import com.example.myeverest.User.Account
 import com.example.myeverest.User.Friends
@@ -62,9 +63,10 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.logout_bar -> {
-                    firebaseAuth.signOut();
+                    switchFragments(FriendList())
+                    /*firebaseAuth.signOut();
                     val switchActivityIntent = Intent(this, Login::class.java)
-                    startActivity(switchActivityIntent);
+                    startActivity(switchActivityIntent);*/
                     true
                 }
                 else -> false

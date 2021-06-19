@@ -161,6 +161,7 @@ public class Register extends AppCompatActivity {
                                     user.put("vorname", vorname);
                                     user.put("nachname", nachname);
                                     user.put("points", 0);
+                                    user.put("likes", 0);
                                     documentReference.set(user);
                                     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 

@@ -40,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class LocationMap extends Fragment {
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
@@ -119,7 +120,13 @@ public class LocationMap extends Fragment {
                     for(QueryDocumentSnapshot document : task.getResult()) {
                         list.add(document);
                     }
-                    finishedCallback.callback(list);
+                    try {
+                        finishedCallback.callback(list);
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
