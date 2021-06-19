@@ -38,6 +38,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.concurrent.ExecutionException;
+
 public class Login extends AppCompatActivity {
 
     EditText mEMail, mPassword;
@@ -167,7 +169,13 @@ public class Login extends AppCompatActivity {
                 public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()) {
                         for(QueryDocumentSnapshot i : task.getResult()) {
-                            finishedCallback.callback(i.get("username").toString());
+                            try {
+                                finishedCallback.callback(i.get("username").toString());
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }

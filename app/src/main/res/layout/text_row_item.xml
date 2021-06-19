@@ -1,13 +1,9 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background">
 
-
-    <FrameLayout
-        android:layout_width="423dp"
+        android:id="@+id/frameLayout2"
+        android:layout_width="match_parent"
         android:layout_height="359dp"
         android:background="@color/cold_medium_blue"
         android:gravity="center_vertical"
@@ -34,19 +30,20 @@
             android:layout_marginTop="50dp"
             app:srcCompat="@drawable/test" />
 
-        <ImageButton
-            android:id="@+id/imageButtonLikes"
-            android:layout_width="62dp"
-            android:layout_height="55dp"
-            android:layout_gravity="right"
-            app:srcCompat="@drawable/like" />
-
         <TextView
             android:id="@+id/textViewLikes"
             android:layout_width="71dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
             android:layout_marginLeft="150dp"
+            android:layout_marginRight="10dp"
             android:text="TextView" />
-    </FrameLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="20dp"
+        android:background="@color/background" />
+</FrameLayout>

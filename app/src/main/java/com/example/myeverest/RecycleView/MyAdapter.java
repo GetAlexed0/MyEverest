@@ -51,11 +51,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull MyAdapter.ViewHolder holder, int position) {
-        if(on_insta){
-            holder.getTextView().setText(likes.get(position));
-        }
         holder.getTextView().setText(localDataStrings.get(position));
         holder.getImageView().setImageBitmap(localDataImages.get(position));
+        if(on_insta){
+            holder.getTextView_likes().setText(likes.get(position).toString());
+        }
 
     }
 
