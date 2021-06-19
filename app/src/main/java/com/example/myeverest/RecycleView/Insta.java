@@ -55,6 +55,7 @@ public class Insta extends Fragment {
 
     ArrayList<String> liste = new ArrayList<String>();
     String username;
+    int likes = 0;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -126,8 +127,6 @@ public class Insta extends Fragment {
                 }
             }
         });
-
-
 }
 
     public static Bitmap createImage(int width, int height, int color) {
@@ -138,4 +137,55 @@ public class Insta extends Fragment {
         canvas.drawRect(0F, 0F, (float) width, (float) height, paint);
         return bitmap;
     }
+
+
+    public void createLikes(List<Bitmap> bitmapList, List<String> usernames) {
+
+
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        DocumentReference docRef;
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        username = sharedPreferences.getString("username", "failed");
+        docRef = firestore.collection("users").document(username);
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot snapshot = task.getResult();
+                    if(snapshot.exists()) {
+                        Log.d("Account", "Current data: " + snapshot.get("username"));
+                        Log.d("Account", "Current data: " + snapshot.get("like"));
+
+                         likes = ((Long) snapshot.get("like")).intValue();
+
+                    }
+                }
+            }
+        });
+
+        MyAdapter customAdapter = new MyAdapter(usernames,bitmapList);
+        RecyclerView recyclerList = getView().findViewById(R.id.recycleTest);
+        recyclerList.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerList.setAdapter(customAdapter);
+
+        recyclerList.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), recyclerList, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+
+                }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+                likes = likes +1;
+                docRef.update("like", likes);
+            }
+        }));
+
+
+    }
+
+
+
 }
