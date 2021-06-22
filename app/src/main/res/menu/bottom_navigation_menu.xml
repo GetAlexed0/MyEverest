@@ -23,6 +23,6 @@
     <item
         android:id="@+id/logout_bar"
         android:enabled="true"
-        android:icon="@drawable/ic_logout"
-        android:title="Ausloggen" />
+        android:icon="@drawable/ic_menu_camera"
+        android:title="Galerie " />
 </menu>

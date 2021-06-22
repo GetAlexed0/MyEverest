@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,7 +26,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     @NotNull
     @Override
     public MyAdapter.ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.text_row_item, parent, false);
+        View view;
+        if(on_insta) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.text_row_item_insta, parent, false);
+        }
+
+        else {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.text_row_item_friends, parent, false);
+        }
 
         return new ViewHolder(view);
     }
@@ -48,13 +54,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         return localDataStrings.get(pos);
     }
 
-
+    public void setLikesAtPosition(int pos, int value) {
+        likes.set(pos, value);
+    }
     @Override
     public void onBindViewHolder(@NonNull @NotNull MyAdapter.ViewHolder holder, int position) {
         holder.getTextView().setText(localDataStrings.get(position));
         holder.getImageView().setImageBitmap(localDataImages.get(position));
         if(on_insta){
-            holder.getTextView_likes().setText(likes.get(position).toString());
+            holder.getTextView_likes().setText("Likes: " + likes.get(position).toString());
         }
 
     }

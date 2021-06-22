@@ -1,23 +1,15 @@
 package com.example.myeverest
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.ui.AppBarConfiguration
-import com.example.myeverest.Helpers.CallBack
-import com.example.myeverest.Helpers.DataHandler
-import com.example.myeverest.Helpers.DatabaseHandler
 import com.example.myeverest.RecycleView.FriendList
 import com.example.myeverest.RecycleView.Insta
 import com.example.myeverest.User.Account
-import com.example.myeverest.User.Friends
-import com.example.myeverest.User.Login
 import com.example.myeverest.challenges.ChallengeOverview
 import com.example.myeverest.challenges.LocationMap
-import com.example.myeverest.challenges.Maps
-import com.example.myeverest.challenges.Stepcounter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
@@ -59,11 +51,11 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.friends_page -> {
-                    switchFragments(Insta())
+                    switchFragments(FriendList())
                     true
                 }
                 R.id.logout_bar -> {
-                    switchFragments(FriendList())
+                    switchFragments(Insta())
                     /*firebaseAuth.signOut();
                     val switchActivityIntent = Intent(this, Login::class.java)
                     startActivity(switchActivityIntent);*/

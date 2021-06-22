@@ -84,11 +84,9 @@ public class Account extends Fragment {
     TextView mUsername, mPrename, mAddress, mBirthdate, mSurname, mEMail;
     TextView currentLvl, progressAbsolute, stepCount;
     Button mChangeButton;
-    FirebaseAuth fAuth = FirebaseAuth.getInstance();
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     String vorname, nachname, adresse, geburtsdatum, username;
     ProgressBar lvlBar;
-    private String monthString,dayString,yearString;
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -161,32 +159,24 @@ public class Account extends Fragment {
         geburtsdatum = mBirthdate.getText().toString().trim();
 
 
-                if(TextUtils.isEmpty(vorname)) {
-                    mPrename.setError("Kein Vorname eingegeben");
-                    return;
+                if(!TextUtils.isEmpty(vorname)) {
+                    docRef.update("vorname", vorname);
                 }
 
-                docRef.update("vorname", vorname);
-
-
-                if(TextUtils.isEmpty(nachname)) {
-                    mSurname.setError("Kein Nachname eingegeben");
-                    return;
+                if(!TextUtils.isEmpty(nachname)) {
+                    docRef.update("nachname", nachname);
                 }
-
-                docRef.update("nachname", nachname);
-
-
                 if(TextUtils.isEmpty(adresse)) {
-                    mAddress.setError("Keine Adresse eingegeben");
-                    return;
-        }
+                    docRef.update("adresse", adresse );
+                }
 
-        docRef.update("adresse", adresse );
 
-        if(TextUtils.isEmpty(geburtsdatum) && geburtsdatum.length() < 10) {
-            mBirthdate.setError("Keingültiges Geburtsdatum eingegeben");
+        //TODO Geburtsdatum fixen
+        if(!(TextUtils.isEmpty(geburtsdatum) && geburtsdatum.length() < 10)) {
             return;
+        }
+        else {
+            mBirthdate.setError("Kein gültiges Geburtsdatum eingegeben");
         }
 
         docRef.update("geburtsdatum", geburtsdatum);
@@ -201,12 +191,6 @@ public class Account extends Fragment {
                 if(task.isSuccessful()) {
                     DocumentSnapshot snapshot = task.getResult();
                     if(snapshot.exists()) {
-                        Log.d("Account", "Current data: " + snapshot.get("vorname"));
-                        Log.d("Account", "Current data: " + snapshot.get("nachname"));
-                        Log.d("Account", "Current data: " + snapshot.get("adresse"));
-                        Log.d("Account", "Current data: " + snapshot.get("geburtsdatum"));
-                        Log.d("Account", "Current data: " + snapshot.get("email"));
-                        Log.d("Account", "Current data: " + snapshot.get("username"));
 
                         mPrename.setText(snapshot.get("vorname").toString());
                         mSurname.setText(snapshot.get("nachname").toString());

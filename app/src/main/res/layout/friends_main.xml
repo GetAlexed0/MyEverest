@@ -8,8 +8,9 @@
 
     <TextView
         android:id="@+id/textViewUsername_friends"
-        android:layout_width="117dp"
+        android:layout_width="wrap_content"
         android:layout_height="29dp"
+        android:textSize="20sp"
         android:text="TextView"
         android:textColor="@color/cold_dark_blue"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -33,9 +34,10 @@
 
     <TextView
         android:id="@+id/textViewPrename_friends"
-        android:layout_width="144dp"
+        android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:text="TextView"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.153"
@@ -45,15 +47,40 @@
 
     <TextView
         android:id="@+id/textViewSurname_friends"
-        android:layout_width="144dp"
+        android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:text="TextView"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.831"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.378" />
+
+    <TextView
+        android:id="@+id/header_Challenges_friend"
+        android:layout_width="311dp"
+        android:layout_height="42dp"
+        android:text="@string/challenges_tippe_zum_beitreten"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/listView_friends"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.03"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.97" />
+
+    <ListView
+        android:id="@+id/listView_friends"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.65"
+        android:background="@color/cold_medium_blue" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

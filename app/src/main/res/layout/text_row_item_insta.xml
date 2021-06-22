@@ -14,30 +14,33 @@
         app:layout_constraintVertical_bias="0.234">
 
 
-        <TextView
-            android:id="@+id/textViewRecycle"
-            android:layout_width="164dp"
-            android:layout_height="50dp"
-            android:layout_gravity="left"
-            android:text="@string/element_text"
-            android:textColor="@color/white"
-            android:textSize="15dp" />
+    <TextView
+        android:id="@+id/textViewRecycle"
+        android:layout_width="164dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_gravity="left"
+        android:layout_marginLeft="10dp"
+        android:text="@string/element_text"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
 
-        <ImageView
-            android:id="@+id/imageViewRecycle"
-            android:layout_width="418dp"
-            android:layout_height="229dp"
-            android:layout_marginTop="50dp"
-            app:srcCompat="@drawable/test" />
+    <ImageView
+        android:id="@+id/imageViewRecycle"
+        android:layout_width="418dp"
+        android:layout_height="285dp"
+        android:layout_marginTop="50dp"
+        app:srcCompat="@drawable/test" />
 
-        <TextView
-            android:id="@+id/textViewLikes"
-            android:layout_width="71dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="150dp"
-            android:layout_marginRight="10dp"
-            android:text="TextView" />
 
+    <TextView
+        android:id="@+id/textViewLikes"
+        android:layout_width="71dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="180dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/white"
+        android:text="Likes: 0" />
 
     <View
         android:id="@+id/divider"

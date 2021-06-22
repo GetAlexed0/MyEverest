@@ -1,7 +1,6 @@
 package com.example.myeverest.challenges;
 
 import android.content.SharedPreferences;
-import android.content.res.ObbInfo;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,23 +18,16 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.R.layout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.myeverest.Helpers.CallBack;
-import com.example.myeverest.Helpers.CustomAdapter;
-import com.example.myeverest.Helpers.DataHandler;
 import com.example.myeverest.R;
-import com.example.myeverest.challenges.Maps;
-import com.example.myeverest.challenges.ChallengeCreator;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -46,11 +38,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class ChallengeOverview extends Fragment {
@@ -123,6 +112,7 @@ public class ChallengeOverview extends Fragment {
                         challengeDoc.update("users", FieldValue.arrayUnion(username));
                         userDoc.update("challenges", FieldValue.arrayUnion(challengeTitle));
                         refreshChallenges();
+                        titleInput.setText("");
                     }
 
                     else {
