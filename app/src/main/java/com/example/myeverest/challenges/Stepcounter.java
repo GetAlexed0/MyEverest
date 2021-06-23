@@ -49,8 +49,8 @@ public class Stepcounter extends Fragment implements SensorEventListener {
 
 
     boolean running = false;
-    private long steps = 0;
-    private long goalsteps;
+    private int steps = 0;
+    private int goalsteps;
     String challengeID, username;
 
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -75,7 +75,7 @@ public class Stepcounter extends Fragment implements SensorEventListener {
         }
 
         arguments = getArguments();
-        goalsteps = (long) arguments.getDouble("steps");
+        goalsteps = arguments.getInt("steps");
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         username = sharedPreferences.getString("username", "failed");
@@ -87,14 +87,16 @@ public class Stepcounter extends Fragment implements SensorEventListener {
         stepBar.setIndeterminate(false);
         stepBar.setSecondaryProgress(100);
 
+        stepText.setText("Schritte: 0 \n von " + goalsteps );
+
         stepButton = v.findViewById(R.id.step_btn);
         stepButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 steps++;
-                stepText.setText("Schritte: " + steps);
+                stepText.setText("Schritte: " + steps + "\n von " + goalsteps );
                 userDoc.update("steps", FieldValue.increment(1));
-                stepBar.setProgress((int) steps);
+                stepBar.setProgress(steps);
                 if(steps >= goalsteps) {
                     Fragment frag = getFragmentManager().findFragmentById(R.id.fragmentContainerView);
                     ImageView cancel = frag.getView().findViewById(R.id.cancelButton);
@@ -111,11 +113,11 @@ public class Stepcounter extends Fragment implements SensorEventListener {
             public void onClick(View v) {
                 steps = 0;
                 stepText.setText("Schritte: " + steps);
-                stepBar.setProgress((int) steps, false);
+                stepBar.setProgress(steps, false);
             }
         });
 
-        stepBar.setMax((int) goalsteps);
+        stepBar.setMax(goalsteps);
     }
 
     @Override
@@ -154,9 +156,9 @@ public class Stepcounter extends Fragment implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         if(running) {
             steps++;
-            stepText.setText("Schritte: " + steps);
+            stepText.setText("Schritte: " + steps + "\n von " + goalsteps );
             userDoc.update("steps", FieldValue.increment(1));
-            stepBar.setProgress((int) steps);
+            stepBar.setProgress(steps);
 
             if(steps >= goalsteps) {
                 ImageView cancel = getParentFragment().getView().findViewById(R.id.cancelButton);

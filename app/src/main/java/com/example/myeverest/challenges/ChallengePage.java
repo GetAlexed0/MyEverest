@@ -32,7 +32,7 @@ public class ChallengePage extends Fragment {
     TextView titleText, descText, pointText;
     ImageView confirm, cancel;
     Bundle arguments;
-    long points = -1;
+    int points = -1;
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
     @Nullable
@@ -84,7 +84,7 @@ public class ChallengePage extends Fragment {
             public void callback(DocumentSnapshot data) {
                 String desc = data.get("description").toString();
                 String ctitle = data.get("title").toString();
-                points = (long) data.get("points");
+                points = ((Long) data.get("points")).intValue();
                 initializeFields(ctitle, desc, (int) points);
                 fillInnerFragment(data);
             }
@@ -101,7 +101,7 @@ public class ChallengePage extends Fragment {
         Bundle arguments = new Bundle();
 
         if(type.equals("WALK")) {
-            arguments.putDouble("steps", (double) doc.get("steps"));
+            arguments.putInt("steps",((Long) doc.get("steps")).intValue());
             Fragment fragment = new Stepcounter();
             fragment.setArguments(arguments);
             switchfragment(fragment, true);

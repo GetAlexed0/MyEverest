@@ -38,9 +38,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.myeverest.Helpers.DataHandler;
 import com.example.myeverest.R;
+import com.example.myeverest.challenges.ChallengeOverview;
+import com.example.myeverest.ui.StartingActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -83,7 +86,7 @@ public class Account extends Fragment {
 
     TextView mUsername, mPrename, mAddress, mBirthdate, mSurname, mEMail;
     TextView currentLvl, progressAbsolute, stepCount;
-    Button mChangeButton;
+    Button mChangeButton, logoutBtn;
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     String vorname, nachname, adresse, geburtsdatum, username;
     ProgressBar lvlBar;
@@ -128,6 +131,7 @@ public class Account extends Fragment {
         currentLvl = v.findViewById(R.id.currentlvl);
         progressAbsolute = v.findViewById(R.id.progressabsolute);
         stepCount = v.findViewById(R.id.steps_account);
+        logoutBtn = v.findViewById(R.id.logout_btn);
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -148,6 +152,15 @@ public class Account extends Fragment {
             }
         });
 
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(getActivity(), Login.class);
+                getActivity().startActivity(intent);
+                getActivity().finish();
+            }
+        });
     }
 
 
@@ -172,14 +185,14 @@ public class Account extends Fragment {
 
 
         //TODO Geburtsdatum fixen
-        if(!(TextUtils.isEmpty(geburtsdatum) && geburtsdatum.length() < 10)) {
-            return;
+        if((!TextUtils.isEmpty(geburtsdatum)) && !(geburtsdatum.length() < 10)) {
+            docRef.update("geburtsdatum", geburtsdatum);
         }
         else {
             mBirthdate.setError("Kein gültiges Geburtsdatum eingegeben");
         }
 
-        docRef.update("geburtsdatum", geburtsdatum);
+
 
     }
 
@@ -203,7 +216,7 @@ public class Account extends Fragment {
                         }
                         mEMail.setText(snapshot.get("email").toString());
                         int test = ((Long) snapshot.get("points")).intValue();
-                        currentLvl.setText(String.valueOf(getLevel(test)));
+                        currentLvl.setText(String.valueOf(getLevel(test)+1));
                         lvlBar.setProgress((int) (getProgressToNextLevel(test, true)*100));
                         progressAbsolute.setText(String.valueOf((int) (getProgressToNextLevel(test, false))) + "\n Punkte bis " + String.valueOf(getLevel(test)+1));
                         stepCount.setText("Schritte gesamt: " + String.valueOf(snapshot.get("steps")));
@@ -302,7 +315,7 @@ public class Account extends Fragment {
         new DownloadImageFromInternet((ImageView) v.findViewById(R.id.profilePic)).execute(imageUrl);
     }
     private static int getLevel(int xp) {
-        int ret = (int) (-1 + Math.sqrt(1+xp/100));
+        int ret = (int) (Math.sqrt(1+xp/100) - 1);
         return ret;
     }
 
@@ -325,7 +338,6 @@ public class Account extends Fragment {
         ImageView imageView;
         public DownloadImageFromInternet(ImageView imageView) {
             this.imageView=imageView;
-            Toast.makeText(getActivity().getApplicationContext(), "Please wait, it may take a few minute...",Toast.LENGTH_SHORT).show();
         }
         protected Bitmap doInBackground(String... urls) {
             String imageURL=urls[0];
