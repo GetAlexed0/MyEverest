@@ -190,7 +190,7 @@ public class ChallengeOverview extends Fragment {
         popupMenu.show();
     }
 
-    private void switchFragments(Fragment fragment) {
+    public void switchFragments(Fragment fragment) {
         final FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.fragmentContainerView, fragment, "TAG");
         ft.commit();

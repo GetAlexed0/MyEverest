@@ -12,6 +12,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -222,6 +223,10 @@ public class Maps extends Fragment implements OnMapReadyCallback {
 
                         DocumentReference createdBy = firestore.collection("users").document(username);
                         createdBy.update("challenges", FieldValue.arrayUnion(challengetitle));
+
+                        final FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        ft.replace(R.id.fragmentContainerView, new ChallengeOverview(), "TAG");
+                        ft.commit();
 
                     }
                 }

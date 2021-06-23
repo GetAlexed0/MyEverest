@@ -171,30 +171,20 @@ public class FriendList extends Fragment {
                 if(task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
 
-                    if(document.exists()) {
+                    if (document.exists()) {
                         List<String> freunde = (List<String>) document.get("friends");
-
-                        List<Bitmap> bits = new ArrayList<>();
-                        createBitmapList(new CallBack<List<Bitmap>>() {
-                            @Override
-                            public void callback(List<Bitmap> data) {
-                                fillRecyclerView(data, freunde);
-                            }
-                        }, freunde);
-                        for(int i = 0; i < freunde.size(); i++) {
-                            counter = i;
+                        if (freunde != null) {
+                            List<Bitmap> bits = new ArrayList<>();
+                            createBitmapList(new CallBack<List<Bitmap>>() {
+                                @Override
+                                public void callback(List<Bitmap> data) {
+                                    fillRecyclerView(data, freunde);
+                                }
+                            }, freunde);
                         }
-
-
-
-                        for(int i = 0; i < liste.size(); i++) {
-                            Log.d("Ausgabe", liste.get(i));
-                        }
+                    } else {
+                        System.out.println("get failed with " + task.getException());
                     }
-
-                }
-                else {
-                    System.out.println("get failed with "+ task.getException());
                 }
             }
         });
