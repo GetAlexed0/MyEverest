@@ -13,20 +13,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class DataHandler extends Application {
-    private String username;
-    private Boolean test;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public Boolean getTest() {
-        return test;
-    }
 
     public static class myTask extends AsyncTask<String, Void, Bitmap> {
 

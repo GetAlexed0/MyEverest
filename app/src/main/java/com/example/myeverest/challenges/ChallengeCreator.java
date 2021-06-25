@@ -42,10 +42,7 @@ public class ChallengeCreator extends Fragment {
     Button button;
     Slider seekBar;
     Bundle arguments;
-    String type, currentUser, username;
-    Boolean exists;
-    QueryDocumentSnapshot ret;
-    FirebaseAuth fauth = FirebaseAuth.getInstance();
+    String type, username;
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
     @Override

@@ -52,17 +52,8 @@ public class MapsFragment extends Fragment {
                         //initialisiere MarkerOptions
                         MarkerOptions markerOptions = new MarkerOptions();
 
-/*
-                        LatLng home = new LatLng(49.48143872888664, 8.474383085521366);
-*/
-
-
                         markerOptions.position(latLng);
                         markerOptions.title(latLng.latitude + " : " + latLng.longitude);
-
-/*
-                        CameraPosition cameraPosition = new CameraPosition.Builder().target(home).zoom(10).build();
-*/
 
                         //marker entfernen
                         googleMap.clear();
@@ -79,13 +70,6 @@ public class MapsFragment extends Fragment {
 
                     }
                 });
-                LatLng home = new LatLng(Maps.getLastknown().getLatitude(), Maps.getLastknown().getLongitude());
-                googleMap.addMarker(new MarkerOptions()
-                        .position(home)
-                        .title("Mein Zuhause"));
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(home).zoom(10).build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
             }
         });
 

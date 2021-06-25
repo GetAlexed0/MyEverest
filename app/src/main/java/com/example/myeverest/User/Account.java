@@ -165,7 +165,6 @@ public class Account extends Fragment {
 
 
     public void changeData() {
-
         vorname = mPrename.getText().toString().trim();
         nachname = mSurname.getText().toString().trim();
         adresse = mAddress.getText().toString().trim();
@@ -183,8 +182,6 @@ public class Account extends Fragment {
                     docRef.update("adresse", adresse );
                 }
 
-
-        //TODO Geburtsdatum fixen
         if((!TextUtils.isEmpty(geburtsdatum)) && !(geburtsdatum.length() < 10)) {
             docRef.update("geburtsdatum", geburtsdatum);
         }
@@ -266,14 +263,12 @@ public class Account extends Fragment {
     }
 
     private void uploadPicture(byte[] image) {
-
-
         final View v = getView();
         final ProgressDialog pd = new ProgressDialog(v.getContext());
         pd.setTitle("Bild wird hochgeladen...");
         pd.show();
 
-        StorageReference riversRef = storageReference.child("images/" + username);
+        StorageReference riversRef = storageReference.child("profilePictures/" + username);
 
         riversRef.putBytes(image)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

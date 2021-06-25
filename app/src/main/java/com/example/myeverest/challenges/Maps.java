@@ -187,12 +187,6 @@ public class Maps extends Fragment implements OnMapReadyCallback {
         gMap.moveCamera(CameraUpdateFactory.newLatLng(position));
     }
 
-    public static double round(double d, int decimalPlace) {
-        BigDecimal bd = new BigDecimal(Double.toString(d));
-        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
-        return bd.doubleValue();
-    }
-
     public void createChallenge(Location loc) {
         String challengetitle = titleInput.getText().toString().trim();
         DocumentReference challenge = firestore.collection("challenges").document(challengetitle);

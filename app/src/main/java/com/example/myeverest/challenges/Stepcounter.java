@@ -51,10 +51,9 @@ public class Stepcounter extends Fragment implements SensorEventListener {
     boolean running = false;
     private int steps = 0;
     private int goalsteps;
-    String challengeID, username;
+    String username;
 
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     DocumentReference userDoc;
 
     @Override
@@ -129,11 +128,11 @@ public class Stepcounter extends Fragment implements SensorEventListener {
 
 
         if(stepSensor == null) {
-            Toast.makeText(getActivity(), "No Sensor detected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Kein Sensor gefunden", Toast.LENGTH_SHORT).show();
         }
         else {
             sManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_NORMAL);
-            Toast.makeText(getActivity(), "Listener registered", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Listener registriert", Toast.LENGTH_SHORT).show();
         }
     }
 

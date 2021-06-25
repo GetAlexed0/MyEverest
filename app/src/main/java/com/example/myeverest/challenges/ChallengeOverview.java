@@ -130,10 +130,16 @@ public class ChallengeOverview extends Fragment {
                 String[] list = new String[data.size()];
 
                 for(int i = 0; i < data.size(); i++) {
-                    Log.d("Joar2", data.get(i).get("title").toString());
-                    list[i] = data.get(i).get("title").toString();
+                    if(!data.get(i).get("description").toString().isEmpty()) {
+                        list[i] = new String("\nChallenge: " + data.get(i).get("title").toString() + " \n\nBeschreibung: " + data.get(i).get("description").toString() + "\n");
+                    }
+
+                    else {
+                        list[i] = new String("\nChallenge: " + data.get(i).get("title").toString() + " \n\nBeschreibung: Maps-Challenge \n");
+
+                    }
                 }
-                ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(getContext(), layout.simple_list_item_1, list);
+                ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(getContext(), R.layout.custom_listview_item, list);
                 listView.setAdapter(adapter);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override

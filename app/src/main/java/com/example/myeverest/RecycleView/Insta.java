@@ -84,7 +84,6 @@ public class Insta extends Fragment {
     public void onActivityCreated(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         super.onCreate(savedInstanceState);
-        FirebaseFirestore firestore;
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         username = sharedPreferences.getString("username", "failed");
@@ -206,13 +205,10 @@ public class Insta extends Fragment {
     }
 
     private void uploadPicture(byte[] image) {
-
-
         final View v = getView();
         final ProgressDialog pd = new ProgressDialog(v.getContext());
         pd.setTitle("Bild wird hochgeladen...");
         pd.show();
-        String uuid = UUID.randomUUID().toString();
         DatabaseHandler.checkAnswerSubmission(new CallBack<DocumentSnapshot>() {
             @Override
             public void callback(DocumentSnapshot data) throws ExecutionException, InterruptedException {
