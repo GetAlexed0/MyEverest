@@ -66,20 +66,11 @@ public class Login extends AppCompatActivity {
         mProgressBar = findViewById(R.id.progressBar);
         fAuth = FirebaseAuth.getInstance();
 
-        final Observer<Boolean> nameObserver = new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            }
-        };
-
-        isFinished.observe(this, nameObserver);
-
         mCreateAccount.setOnClickListener(v -> startActivity(new Intent(getApplicationContext(), Register.class)));
 
         mLoginButton.setOnClickListener(v -> {
 
-            //checken ob angegebene Daten sinnig sind
+            //Eingabeprüfung der eingegeben Daten
 
             String email = mEMail.getText().toString().trim();
             String password = mPassword.getText().toString().trim();
@@ -101,7 +92,7 @@ public class Login extends AppCompatActivity {
 
             mProgressBar.setVisibility(View.VISIBLE);
 
-            //authentifizierung mit Firebase
+            //Authentifizierung mit Firebase
 
             fAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
                 if(task.isSuccessful()) {
@@ -133,8 +124,7 @@ public class Login extends AppCompatActivity {
                 pwResetDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //email extrahieren und reset link versenden
-
+                        //Email extrahieren und reset Link versenden
                         String mail = resetMail.getText().toString();
                         fAuth.sendPasswordResetEmail(mail).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -150,19 +140,22 @@ public class Login extends AppCompatActivity {
                     }
                 });
 
+                //Bei Anklicken von "Nein"
                 pwResetDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
                     }
                 });
-
+                 //Anzeige von Reset Dialog
                 pwResetDialog.create().show();
             }
         });
     }
 
+
         public void getUsernameByMail(CallBack <String> finishedCallback, String mail) {
+            //Entnahme der Email Adresse anhand des Nutzernamens
             Query query = firestore.collection("users").whereEqualTo("email", mail);
             query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
@@ -170,6 +163,7 @@ public class Login extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         for(QueryDocumentSnapshot i : task.getResult()) {
                             try {
+                                //Fehlerprüfung nach Callback-Aufruf
                                 finishedCallback.callback(i.get("username").toString());
                             } catch (ExecutionException e) {
                                 e.printStackTrace();
@@ -185,8 +179,10 @@ public class Login extends AppCompatActivity {
     private void savePreferences(String key, String value){
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
+        //Speicherung der Key/Value Werte
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(key, value);
+        //Speicherung der Werte in SharedPreferences
         editor.apply();
 
     }

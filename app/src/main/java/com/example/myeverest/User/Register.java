@@ -79,12 +79,14 @@ public class Register extends AppCompatActivity {
         mRegisterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Verknüpfung der Daten mit den Feldern
                 String email = mEMail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
                 String name = mFullName.getText().toString().trim();
                 String vorname = mPrename.getText().toString().trim();
                 String nachname = mSurname.getText().toString().trim();
 
+                //Fehlerprüfungen bei den Feldern
                 if(TextUtils.isEmpty(email)) {
                     mEMail.setError("Keine Mail angegeben");
                     return;
@@ -101,6 +103,7 @@ public class Register extends AppCompatActivity {
                     public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()) {
                             for (QueryDocumentSnapshot i : task.getResult()) {
+                                //Fehlerprüfung nach Angaben in den Feldern/Prüfung der Zulässigkeit
                                 mFullName.setError("Username existiert bereits");
                                 return;
                             }
@@ -133,13 +136,12 @@ public class Register extends AppCompatActivity {
 
                             mProgressBar.setVisibility(View.VISIBLE);
 
-                            //registriert den Nutzer in Firebase
+                            //Registriert den Nutzer in Firebase
 
                             fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task2 -> {
                                 if(task2.isSuccessful()) {
 
-                                    //EMail bestätigungslink versenden
-
+                                    //EMail Bestätigungslink versenden
                                     FirebaseUser fUser = fAuth.getCurrentUser();
                                     fUser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
@@ -150,10 +152,12 @@ public class Register extends AppCompatActivity {
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull @NotNull Exception e) {
-                                            Toast.makeText(Register.this, "Fehler. mail nicht verschickt" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            //Fehler bei Absenden der Mail
+                                            Toast.makeText(Register.this, "Fehler Mail nicht verschickt" + e.getMessage(), Toast.LENGTH_SHORT).show();
                                         }
                                     });
 
+                                    //Erstellung der Felder in der Datenbank die später notwendig sind
                                     Toast.makeText(Register.this, "User wurde erstellt", Toast.LENGTH_LONG).show();
                                     userID = fAuth.getCurrentUser().getUid();
                                     DocumentReference documentReference = firestore.collection("users").document(name);
@@ -168,6 +172,7 @@ public class Register extends AppCompatActivity {
                                     documentReference.set(user);
                                     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
+                                    //Ergänzung und Speicherung des Usernames in der SharedPreference
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
                                     editor.putString("username", name);
                                     editor.apply();
@@ -176,6 +181,7 @@ public class Register extends AppCompatActivity {
                                 }
 
                                 else {
+                                    //Fehlerausgabe mit Exceptions
                                     Toast.makeText(Register.this, "Fehler:" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });

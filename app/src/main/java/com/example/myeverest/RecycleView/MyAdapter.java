@@ -28,21 +28,25 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public MyAdapter.ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         View view;
         if(on_insta) {
+            //wenn die Instagram ähnliche Seite gewählt wird, soll das layout passend dazu geöffnet werden
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.text_row_item_insta, parent, false);
         }
 
         else {
+            //wenn die Instagram ähnliche Seite gewählt wird, soll das layout passend dazu geöffnet werden
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.text_row_item_friends, parent, false);
         }
 
         return new ViewHolder(view);
     }
 
+    //Konstruktor für Freunde
     public MyAdapter(List<String> localDataStrings, List<Bitmap> localDataImages) {
         this.localDataImages = localDataImages;
         this.localDataStrings = localDataStrings;
     }
 
+    //Konstruktor für Instagram
     public MyAdapter(List<Integer> likes, List<String> localDataStrings, List<Bitmap> localDataImages){
         this.likes = likes;
         this.localDataImages = localDataImages;
@@ -54,6 +58,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         return localDataStrings.get(pos);
     }
 
+    //Befüllt die Felder in dem Layout passend zur Position in der Liste
     public void setLikesAtPosition(int pos, int value) {
         likes.set(pos, value);
     }
@@ -85,6 +90,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             textView_likes = (TextView) view.findViewById(R.id.textViewLikes);
         }
 
+        //getter für die Felder auf dem Layout
         public TextView getTextView() {
             return textView;
         }

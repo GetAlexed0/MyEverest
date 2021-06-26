@@ -64,14 +64,17 @@ public class FriendList extends Fragment {
         super.onActivityCreated(savedInstanceState);
         super.onCreate(savedInstanceState);
 
+        //Entnahme des Nutzernamens aus der Shared Preference
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         username = sharedPreferences.getString("username", "failed");
 
+        //Befüllung der View
         View v = getView();
         fab = v.findViewById(R.id.addFriendButton);
         friendInput = v.findViewById(R.id.input_AddFriend);
         doc_ref = firestore.collection("users").document(username);
 
+        //Aktualisiert Freunde
         refreshFriends();
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,9 +84,11 @@ public class FriendList extends Fragment {
         });
     }
 
+    //
     public void fillRecyclerView(List<Bitmap> bitlist, List<String> usernames) {
         MyAdapter customAdapter = new MyAdapter(usernames, bitlist);
         RecyclerView listView = getView().findViewById(R.id.recycleTest);
+        //Erstellen des LayoutManagers und des Adapters
         listView.setLayoutManager(new LinearLayoutManager(getContext()));
         listView.setAdapter(customAdapter);
 
@@ -91,9 +96,11 @@ public class FriendList extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 Bundle args = new Bundle();
+                //Setzt NUtzernamen ins Bundle (Liste)
                 args.putString("username_friend", usernames.get(position));
                 Fragment friend = new Friend_Account();
                 friend.setArguments(args);
+                //Wenn man bei Freunden ist, wird das Freunde-Fragment geöffnet
                 final FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.replace(R.id.fragmentContainerView, friend, "Tag");
                 ft.commit();
@@ -108,7 +115,6 @@ public class FriendList extends Fragment {
 
     }
 
-
     public void createBitmapList(@NonNull CallBack<List<Bitmap>> finishedCallback, List<String> usernames) {
         List<Bitmap> bitlist = new ArrayList<>();
         for(int i = 0; i < usernames.size(); i++) {
@@ -116,20 +122,22 @@ public class FriendList extends Fragment {
                 @Override
                 public void callback(DocumentSnapshot data) throws ExecutionException, InterruptedException {
                     if(data.get("profilePic") != null) {
+                        //wenn Bild vorhanden, wird dieses in die Liste hinzugefügt
                         Bitmap image = new DataHandler.myTask().execute(data.get("profilePic").toString()).get();
                         bitlist.add(image);
 
                     }
 
                     else {
+                        //Andernfalls wird ein Default Bild eingesetzt
                         bitlist.add(BitmapFactory.decodeResource(getResources(), R.drawable.test));
                     }
-
+                    //Stimmen die Namen der Nutzer überein wird das Callback beendet
                     if(data.get("username").toString().equals(usernames.get(usernames.size()-1))) {
                         finishedCallback.callback(bitlist);
                     }
                 }
-            }, "users", usernames.get(i));
+            }, "users", usernames.get(i)); //Speicherung des Wertes an der Stelle in der Liste
         }
     }
 
@@ -144,11 +152,13 @@ public class FriendList extends Fragment {
                     if (task.isSuccessful()) {
                         DocumentSnapshot snapshot = task.getResult();
                         if (snapshot.exists()) {
+                            //wenn das Snapshot existiert, sollen die Freunde aus der Liste in der Datenbank entnommen werden
                             List<String> list = (List) snapshot.get("friends");
                             if (list.contains(newFriend)) {
                                 tv.setError("Der User ist bereits auf deiner Freundesliste");
                                 return;
                             }
+                            //neuer Freund wird hinzugefügt
                             doc_ref.update("friends", FieldValue.arrayUnion(newFriend));
                             refreshFriends();
                             tv.setText("");
@@ -170,7 +180,7 @@ public class FriendList extends Fragment {
             public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
-
+                    //aktuelle Freundesliste wird aus der Datenbank entnommen
                     if (document.exists()) {
                         List<String> freunde = (List<String>) document.get("friends");
                         if (freunde != null) {
@@ -183,6 +193,7 @@ public class FriendList extends Fragment {
                             }, freunde);
                         }
                     } else {
+                        //Andernfalls wird die Exeption gerufen
                         System.out.println("get failed with " + task.getException());
                     }
                 }

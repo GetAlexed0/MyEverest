@@ -119,6 +119,7 @@ public class Account extends Fragment {
         username = sharedPreferences.getString("username", "failed");
         docRef = firestore.collection("users").document(username);
 
+        //Verknüpfung der Felder mit den Attributen
         mPrename = v.findViewById(R.id.editTextPrename_account);
         mSurname = v.findViewById(R.id.editTextSurname2);
         mAddress = v.findViewById(R.id.editTextTextPostalAddress);
@@ -133,11 +134,13 @@ public class Account extends Fragment {
         stepCount = v.findViewById(R.id.steps_account);
         logoutBtn = v.findViewById(R.id.logout_btn);
 
+        //Instanziierung der Datenbank
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
         prepareDataForUser();
 
+        //Aufruf der Methoden bei Klick
         profilePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
@@ -170,7 +173,7 @@ public class Account extends Fragment {
         adresse = mAddress.getText().toString().trim();
         geburtsdatum = mBirthdate.getText().toString().trim();
 
-
+                //Speicherung der aktualisierten Daten in Datenbank
                 if(!TextUtils.isEmpty(vorname)) {
                     docRef.update("vorname", vorname);
                 }
@@ -202,6 +205,7 @@ public class Account extends Fragment {
                     DocumentSnapshot snapshot = task.getResult();
                     if(snapshot.exists()) {
 
+                        //Befüllung der Felder mit zugehörigen Daten
                         mPrename.setText(snapshot.get("vorname").toString());
                         mSurname.setText(snapshot.get("nachname").toString());
                         mUsername.setText(snapshot.get("username").toString());
@@ -225,6 +229,8 @@ public class Account extends Fragment {
                 }
             }
         });
+
+        //Nicht zum Klicken
         mEMail.setFocusable(false);
     }
 
@@ -239,6 +245,7 @@ public class Account extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        //Bild wird entnommen
         if(requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null){
             imageUri = data.getData();
             Bitmap bmp = null;
@@ -250,6 +257,7 @@ public class Account extends Fragment {
                 e.printStackTrace();
             }
 
+            //Anpassung der Profilbildgröße
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             float aspectRatio = bmp.getWidth() / (float) bmp.getHeight();
             int width = 700;
@@ -262,6 +270,7 @@ public class Account extends Fragment {
         }
     }
 
+    //Auswahl des Bildes nach Klicken
     private void uploadPicture(byte[] image) {
         final View v = getView();
         final ProgressDialog pd = new ProgressDialog(v.getContext());
@@ -306,6 +315,7 @@ public class Account extends Fragment {
 
     }
 
+    //Bei vorhandenem Bild Feld befüllen
     public void loadUserImage(View v, String imageUrl) {
         new DownloadImageFromInternet((ImageView) v.findViewById(R.id.profilePic)).execute(imageUrl);
     }
@@ -314,6 +324,7 @@ public class Account extends Fragment {
         return ret;
     }
 
+    //Aktuelles Level des Nutzers entnommen
     private static double getProgressToNextLevel(int xp, boolean relative) {
         double lvl = getLevel(xp);
         double explvlbefore = 100 * Math.pow(lvl, 2) + 200*(lvl);
@@ -328,7 +339,7 @@ public class Account extends Fragment {
     }
 
 
-
+    //Bild wird aus URL entnommen
     private class DownloadImageFromInternet extends AsyncTask<String, Void, Bitmap> {
         ImageView imageView;
         public DownloadImageFromInternet(ImageView imageView) {

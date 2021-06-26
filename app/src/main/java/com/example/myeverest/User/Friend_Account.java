@@ -66,13 +66,15 @@ public class Friend_Account extends Fragment {
         super.onActivityCreated(savedInstanceState);
         View v = getView();
 
-       Bundle args = getArguments();
-       username = args.getString("username_friend");
+        //Entnahme der Freunde des aktuellen Nutzers aus Bundle
+        Bundle args = getArguments();
+        username = args.getString("username_friend");
 
+        //Entnahme des aktuelles NUtzers
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         loggedUser = sharedPreferences.getString("username", "failed");
 
-
+        //Collection Instanz mit Nutzernamen
         docRef = firestore.collection("users").document(username);
 
         listView = v.findViewById(R.id.listView_friends);
@@ -95,10 +97,13 @@ public class Friend_Account extends Fragment {
                 if(task.isSuccessful()) {
                     DocumentSnapshot snapshot = task.getResult();
                     if(snapshot.exists()) {
+
+                        //Speicherung der Daten in Logcat
                         Log.d("Friends_Profile", "Current data: " + snapshot.get("vorname"));
                         Log.d("Friends_Profile", "Current data: " + snapshot.get("nachname"));
                         Log.d("Friends_Profile", "Current data: " + snapshot.get("username"));
 
+                        //Felder befüllen mit Daten aus der Datenbank
                         mPrename.setText(snapshot.get("vorname").toString());
                         mSurname.setText(snapshot.get("nachname").toString());
                         mUsername.setText(snapshot.get("username").toString());
@@ -116,6 +121,7 @@ public class Friend_Account extends Fragment {
 
     public void loadUserImage(View v, String imageUrl) {
 
+        //Bei vorhandenem Bild wird das Bild aus URL entnommen
         new DownloadImageFromInternet((ImageView) v.findViewById(R.id.profilePic_friends)).execute(imageUrl);
     }
 
@@ -123,8 +129,10 @@ public class Friend_Account extends Fragment {
         DatabaseHandler.checkAnswerSubmission(new CallBack<DocumentSnapshot>() {
             @Override
             public void callback(DocumentSnapshot data) {
+                //Liste mit Challenges erstellen
                 List<String> list = (List<String>) data.get("challenges");
                 if(list != null) {
+                    //Bei befüllter Liste neuen Adapter erstellen mit Bezug auf den Nutzer und dessen Challenges
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, list);
                     listView.setAdapter(adapter);
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -146,7 +154,7 @@ public class Friend_Account extends Fragment {
     private class DownloadImageFromInternet extends AsyncTask<String, Void, Bitmap> {
 
         ImageView imageView;
-
+        //Bild wird aus URL entnommen und in eine Bitmap umgewandelt
         public DownloadImageFromInternet(ImageView imageView) {
             this.imageView=imageView;
         }
