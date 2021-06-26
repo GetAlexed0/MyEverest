@@ -1,6 +1,7 @@
 package com.example.myeverest
 
 import android.os.Bundle
+import android.view.WindowManager
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -38,24 +39,29 @@ class MainActivity : AppCompatActivity() {
             when(item.itemId) {
 
                 R.id.challenge_page -> {
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
                     switchFragments(ChallengeOverview());
                     true
                 }
                 R.id.user_page -> {
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
                     switchFragments(Account())
                     true
                 }
                 R.id.map_page -> {
                     //Fragment öffnen
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
                     switchFragments(LocationMap())
 
                     true
                 }
                 R.id.friends_page -> {
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
                     switchFragments(FriendList())
                     true
                 }
-                R.id.logout_bar -> {
+                R.id.insta -> {
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
                     switchFragments(Insta())
                     true
                 }

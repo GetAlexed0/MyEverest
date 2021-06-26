@@ -167,12 +167,11 @@ public class Register extends AppCompatActivity {
                                     user.put("vorname", vorname);
                                     user.put("nachname", nachname);
                                     user.put("points", 0);
-                                    user.put("likes", 0);
                                     user.put("friends", new ArrayList<String>());
                                     documentReference.set(user);
                                     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
-                                    //Ergänzung und Speicherung des Usernames in der SharedPreference
+                                    //Ergänzung und Speicherung des Usernames in den SharedPreferences
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
                                     editor.putString("username", name);
                                     editor.apply();
