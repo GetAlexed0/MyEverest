@@ -79,9 +79,9 @@ public class Friend_Account extends Fragment {
 
         listView = v.findViewById(R.id.listView_friends);
         mProfilePic = v.findViewById(R.id.profilePic_friends);
-        mUsername = v.findViewById(R.id.textViewUsername_friends);
-        mPrename = v.findViewById(R.id.textViewPrename_friends);
-        mSurname = v.findViewById(R.id.textViewSurname_friends);
+        mUsername = v.findViewById(R.id.friend_username);
+        mPrename = v.findViewById(R.id.friend_prename);
+        mSurname = v.findViewById(R.id.friend_surname);
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();

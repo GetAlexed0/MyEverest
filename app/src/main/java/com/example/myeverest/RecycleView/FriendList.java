@@ -153,11 +153,6 @@ public class FriendList extends Fragment {
                         DocumentSnapshot snapshot = task.getResult();
                         if (snapshot.exists()) {
                             //wenn das Snapshot existiert, sollen die Freunde aus der Liste in der Datenbank entnommen werden
-                            List<String> list = (List) snapshot.get("friends");
-                            if (list.contains(newFriend)) {
-                                tv.setError("Der User ist bereits auf deiner Freundesliste");
-                                return;
-                            }
                             //neuer Freund wird hinzugefügt
                             doc_ref.update("friends", FieldValue.arrayUnion(newFriend));
                             refreshFriends();

@@ -58,7 +58,6 @@ public class MapsFragment extends Fragment {
                         //marker entfernen
                         googleMap.clear();
                         //Zum zoomen markieren
-                        //googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                         googleMap.addMarker(markerOptions);
 
                         Location location = new Location(LocationManager.GPS_PROVIDER);
@@ -70,6 +69,13 @@ public class MapsFragment extends Fragment {
 
                     }
                 });
+                LatLng home = new LatLng(Maps.getLastknown().getLatitude(), Maps.getLastknown().getLongitude());
+                googleMap.addMarker(new MarkerOptions()
+                        .position(home)
+                        .title("Aktueller Standort"));
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(home).zoom(10).build();
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
             }
         });
 

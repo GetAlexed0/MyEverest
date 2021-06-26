@@ -111,7 +111,7 @@ public class ChallengePage extends Fragment {
 
         //Öffnet innerhalb der aktuellen Ansicht die zugehörige Ansicht zu den Challengetyp mit den Werten der aktuellen challenge
         if(type.equals("WALK")) {
-            arguments.putInt("steps",((Long) doc.get("steps")).intValue());
+            arguments.putInt("steps",((Double) doc.get("steps")).intValue());
             Fragment fragment = new Stepcounter();
             fragment.setArguments(arguments);
             switchfragment(fragment, true);

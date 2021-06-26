@@ -6,19 +6,29 @@
     android:background="@color/background"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textViewUsername_friends"
-        android:layout_width="wrap_content"
-        android:layout_height="29dp"
+        android:layout_width="170dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_height="67dp"
         android:textSize="20sp"
-        android:text="TextView"
+        android:hint="Nutzername"
         android:textColor="@color/cold_dark_blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.265"
+        app:layout_constraintHorizontal_bias="0.13"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.223" />
+        app:layout_constraintVertical_bias="0.223">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/friend_username"
+            android:layout_width="match_parent"
+            android:focusable="false"
+            android:layout_height="wrap_content" />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <ImageView
         android:id="@+id/profilePic_friends"
@@ -32,31 +42,48 @@
         app:layout_constraintVertical_bias="0.177"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <TextView
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textViewPrename_friends"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:text="TextView"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="170dp"
+        android:layout_height="67dp"
+        android:hint="Vorname"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.153"
+        app:layout_constraintHorizontal_bias="0.13"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.378" />
+        app:layout_constraintVertical_bias="0.378" >
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/friend_prename"
+        android:layout_width="match_parent"
+        android:focusable="false"
+        android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
+
+
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textViewSurname_friends"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:text="TextView"
+        android:layout_width="170dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_height="67dp"
+        android:hint="Nachname"
+        android:focusable="false"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.831"
+        app:layout_constraintHorizontal_bias="0.87"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.378" />
+        app:layout_constraintVertical_bias="0.378">
+        <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/friend_surname"
+        android:focusable="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/header_Challenges_friend"

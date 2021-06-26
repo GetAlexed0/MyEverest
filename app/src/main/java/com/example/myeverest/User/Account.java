@@ -219,7 +219,7 @@ public class Account extends Fragment {
                         int test = ((Long) snapshot.get("points")).intValue();
                         currentLvl.setText(String.valueOf(getLevel(test)+1));
                         lvlBar.setProgress((int) (getProgressToNextLevel(test, true)*100));
-                        progressAbsolute.setText(String.valueOf((int) (getProgressToNextLevel(test, false))) + "\n Punkte bis " + String.valueOf(getLevel(test)+1));
+                        progressAbsolute.setText(String.valueOf((int) (getProgressToNextLevel(test, false))) + "\n Punkte bis " + String.valueOf(getLevel(test)+2));
                         stepCount.setText("Schritte gesamt: " + String.valueOf(snapshot.get("steps")));
 
                         if(snapshot.get("profilePic") != null) {

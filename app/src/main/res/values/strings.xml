@@ -42,5 +42,5 @@
     <string name="account_schon_vorhanden_hier_einloggen">Account schon vorhanden? <u>Hier Einloggen!</u></string>
     <string name="username" />
     <string name="element_text">ReclyerElementText</string>
-    <string name="challenges_tippe_zum_beitreten">Challenges (tippe zum beitreten):</string>
+    <string name="challenges_tippe_zum_beitreten">Challenges (Tippe zum Beitreten):</string>
 </resources>

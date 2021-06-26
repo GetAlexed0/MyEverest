@@ -100,6 +100,7 @@ public class Login extends AppCompatActivity {
                     getUsernameByMail(new CallBack<String>() {
                         @Override
                         public void callback(String data) {
+                            //Holt Nutzername aus DB und speichert auf Telefonspeicher
                             savePreferences("username", data);
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         }
