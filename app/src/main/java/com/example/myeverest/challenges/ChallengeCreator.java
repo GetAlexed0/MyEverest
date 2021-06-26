@@ -60,16 +60,18 @@ public class ChallengeCreator extends Fragment {
         titleInput = v.findViewById(R.id.title_input);
         pointInput = v.findViewById(R.id.points_input);
 
-
+        //zieht Nutzername aus dem Telefonspeicher
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         username = sharedPreferences.getString("username", "failed");
 
         button = v.findViewById(R.id.create_walking_btn);
         seekBar = v.findViewById(R.id.steps_seekBar);
 
+        //zieht mitgegebene Paramenter aus dem Fragment
         arguments = getArguments();
         type = arguments.getString("type");
 
+        //zeigt Leiste zum einstellen der Schrittzahl sofern es sich um eine Schrittchallenge handelt
         if(type == "WALK")
         {
             seekBar.setVisibility(View.VISIBLE);
@@ -78,6 +80,8 @@ public class ChallengeCreator extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //erstellt challenge sofern benötigte Felder ausgefüllt sind
                 if(checkFilledFields()) {
                     createChallenge();
                 }
@@ -90,18 +94,10 @@ public class ChallengeCreator extends Fragment {
                 //text.setText(String.valueOf(seekBar.getValue()));
             }
         });
-
-
-        checkAnswerSubmission(new CallBack<DocumentSnapshot>() {
-            @Override
-            public void callback(DocumentSnapshot data) {
-                Log.d("Testcallback", data.getData() + " Hallo");
-            }
-        });
-
-
     }
 
+
+    //schaut ob alle benötigten Textfelder befüllt sind und gibt ggfs Fehler aus
     public boolean checkFilledFields() {
         boolean ret = true;
         if(titleInput.getText().toString().isEmpty()) {
@@ -138,6 +134,8 @@ public class ChallengeCreator extends Fragment {
                             else {
                                 String desc = descriptionInput.getText().toString().trim();
                                 int points = Integer.parseInt(pointInput.getText().toString().trim());
+
+                                //Erstellen und befüllen einer Map für Firestore
                                 Map<String, Object> challengeMap = new HashMap<>();
                                 challengeMap.put("title", challengetitle);
                                 challengeMap.put("description", desc);
@@ -149,12 +147,14 @@ public class ChallengeCreator extends Fragment {
                                 if(type == "WALK") {
                                     challengeMap.put("steps", seekBar.getValue());
                                 }
-
+                                //überträgt challengeMap in DB
                                 challenge.set(challengeMap);
 
                                 DocumentReference createdBy = firestore.collection("users").document(username);
+                                //fügt challenge dem User hinzu
                                 createdBy.update("challenges", FieldValue.arrayUnion(challengetitle));
 
+                                //Öffnet erstellte Challenge und gibt Challengeart und den Titel mit
                                 Fragment individualFragment = new ChallengePage();
                                 Bundle individualArguments = new Bundle();
                                 individualArguments.putString("type", type);
@@ -168,35 +168,8 @@ public class ChallengeCreator extends Fragment {
                 });
     }
 
-    private void checkAnswerSubmission(@NonNull CallBack<DocumentSnapshot> finishedCallback) {
 
-        DocumentReference answerDatabase = firestore.collection("users").document("sgullmann@gmail.com");
-        answerDatabase.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-
-                    if (document.exists()) {
-                        try {
-                            finishedCallback.callback(document);
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        Log.d("Testcallback", "In der if");
-                    } else {
-                        Log.d("Testcallback", "In der else");
-                    }
-                }
-                else {
-                    Log.d("Testcallback", "Penis");
-                }
-            }
-        });
-    }
-
+    //wechselt fragmentContainerView zu mitgegebenem Fragment
     private void switchFragments(Fragment fragment) {
         final FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.fragmentContainerView, fragment, "TAG");

@@ -50,9 +50,8 @@ import java.util.Map;
 
 public class Maps extends Fragment implements OnMapReadyCallback {
 
-    private FusedLocationProviderClient fusedLocationClient;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    TextView titleInput, pointInput, descriptionInput;
+    TextView titleInput, pointInput;
     Button setButton, showButton;
     static TextInputEditText coordLong;
     GoogleMap gMap;
@@ -72,7 +71,6 @@ public class Maps extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
 
@@ -81,11 +79,14 @@ public class Maps extends Fragment implements OnMapReadyCallback {
         super.onActivityCreated(savedInstanceState);
         View v = getView();
 
+        //zieht Nutzername aus Telefonspeicher
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         username = sharedPreferences.getString("username", "failed");
         coordLong = v.findViewById(R.id.inputCoordinates);
         titleInput = v.findViewById(R.id.title_input);
         pointInput = v.findViewById(R.id.points_input);
+
+        //
         getLastKnownLocation();
         MapsFragment.setLocation(getLastKnownLocation());
 
@@ -100,13 +101,14 @@ public class Maps extends Fragment implements OnMapReadyCallback {
         Fragment fragment = new MapsFragment();
         setButton = v.findViewById(R.id.create_location_btn);
         showButton = v.findViewById(R.id.showLocation_btn);
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
 
         setButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!titleInput.getText().toString().isEmpty()) {
                     if (!pointInput.getText().toString().isEmpty()) {
+                        //holt sich den Marker aus dem Mapsfragment um position für das Ziel zu setzen
                         MarkerOptions marker = MapsFragment.getOptions();
                         if (marker != null) {
                             lastknown.setLongitude(marker.getPosition().longitude);
@@ -135,6 +137,7 @@ public class Maps extends Fragment implements OnMapReadyCallback {
 
     }
 
+    //Aktualisiert den Text wenn eine neue Position auf der Karte angeclickt wurde
     public static void updateCoordinateText() {
         MarkerOptions marker = MapsFragment.getOptions();
         if(marker != null) {
@@ -145,21 +148,25 @@ public class Maps extends Fragment implements OnMapReadyCallback {
     }
 
     private Location getLastKnownLocation() {
+
+        //fragt Berechtigungen ab ab Android Version 23
         if ( Build.VERSION.SDK_INT >= 23){
             if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) !=
-                    PackageManager.PERMISSION_GRANTED  ){
+                    PackageManager.PERMISSION_GRANTED  )    {
                 requestPermissions(new String[]{
-                                android.Manifest.permission.ACCESS_FINE_LOCATION},
+                        android.Manifest.permission.ACCESS_FINE_LOCATION},
                         PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
                 return getLastknown();
             }
         }
 
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            System.out.println("Permissions fehlen");
 
+            //Checkt ob Berechtigungen tatsächlich vorhanden
             return null;
         }
+
+        //erstellt Locationmanager und zieht provider heraus um genaueste Position zu finden
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         List<String> providers = locationManager.getProviders(true);
         Location bestLocation = null;
@@ -179,6 +186,7 @@ public class Maps extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        //Fügt aktuelle Position zur Karte hinzu und fokussiert sie
         gMap = googleMap;
         position = new LatLng(lastknown.getLatitude(), lastknown.getLongitude());
         gMap.addMarker(new MarkerOptions()
@@ -201,6 +209,8 @@ public class Maps extends Fragment implements OnMapReadyCallback {
                     }
 
                     else {
+
+                        //Fügt werte in eine Map und setzt das Dokument in die DB
                         int points = Integer.parseInt(pointInput.getText().toString().trim());
                         Map<String, Object> challengeMap = new HashMap<>();
                         challengeMap.put("title", challengetitle);
@@ -215,6 +225,7 @@ public class Maps extends Fragment implements OnMapReadyCallback {
 
                         challenge.set(challengeMap);
 
+                        //Fügt Challenge zum User hinzu und umgekert, anschließend wird die Challengeübersicht geöffnet
                         DocumentReference createdBy = firestore.collection("users").document(username);
                         createdBy.update("challenges", FieldValue.arrayUnion(challengetitle));
 

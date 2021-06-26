@@ -67,19 +67,23 @@ public class Stepcounter extends Fragment implements SensorEventListener {
     public void onActivityCreated(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         View v = getView();
+
+        //Holt Berechtigungen für Schrittzähler ein
         if(ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_DENIED && Build.VERSION.SDK_INT >= 23){
             //ask for permission
             requestPermissions(new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, 19);
         }
 
+        //Holt Schrittzahl der Challenge aus dem Bundle des Fragments
         arguments = getArguments();
         goalsteps = arguments.getInt("steps");
 
+        //zieht Nutzername aus Telefonspeicher
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         username = sharedPreferences.getString("username", "failed");
+
         userDoc = firestore.collection("users").document(username);
-        //challengeDoc = firestore.collection("challenges").document(challengeID);
         sManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         stepText = v.findViewById(R.id.stepcounter);
         stepBar = v.findViewById(R.id.stepBar);
@@ -94,8 +98,11 @@ public class Stepcounter extends Fragment implements SensorEventListener {
             public void onClick(View v) {
                 steps++;
                 stepText.setText("Schritte: " + steps + "\n von " + goalsteps );
+                //Fügt Schritte dem User in der DB hinzu und aktualisiert die Ansicht
                 userDoc.update("steps", FieldValue.increment(1));
                 stepBar.setProgress(steps);
+
+                //Sobald Schrittziel erreicht wurde verschwindet der Abbrechen-Button
                 if(steps >= goalsteps) {
                     Fragment frag = getFragmentManager().findFragmentById(R.id.fragmentContainerView);
                     ImageView cancel = frag.getView().findViewById(R.id.cancelButton);
@@ -104,7 +111,7 @@ public class Stepcounter extends Fragment implements SensorEventListener {
 
             }
         });
-
+        //Setzt Schritte auf 0 zurück
         resetButton = v.findViewById(R.id.reset_btn);
         resetButton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -123,9 +130,10 @@ public class Stepcounter extends Fragment implements SensorEventListener {
     public void onResume() {
         super.onResume();
         running = true;
-        stepSensor = sManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
         stepBar.setIndeterminate(false);
 
+        //Initialisiert den Schrittsensor falls vorhanden
+        stepSensor = sManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
 
         if(stepSensor == null) {
             Toast.makeText(getActivity(), "Kein Sensor gefunden", Toast.LENGTH_SHORT).show();
@@ -138,6 +146,7 @@ public class Stepcounter extends Fragment implements SensorEventListener {
 
     @Override
     public void onPause() {
+        //Stoppt den Schrittsensor
         super.onPause();
         running = false;
         sManager.unregisterListener(this);
@@ -145,6 +154,7 @@ public class Stepcounter extends Fragment implements SensorEventListener {
 
     @Override
     public void onStop() {
+        //Stoppt den Schrittsensor
         super.onStop();
         sManager.unregisterListener(this, stepSensor);
     }
@@ -153,12 +163,14 @@ public class Stepcounter extends Fragment implements SensorEventListener {
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onSensorChanged(SensorEvent event) {
+        //Sofern Schrittsensor läuft werden Schritte registiriert und DB + Ansicht aktualisiert
         if(running) {
             steps++;
             stepText.setText("Schritte: " + steps + "\n von " + goalsteps );
             userDoc.update("steps", FieldValue.increment(1));
             stepBar.setProgress(steps);
 
+            //Versteckt Abbrechen-Button sofern Schrittzahl erreicht
             if(steps >= goalsteps) {
                 ImageView cancel = getParentFragment().getView().findViewById(R.id.cancelButton);
                 cancel.setVisibility(View.INVISIBLE);

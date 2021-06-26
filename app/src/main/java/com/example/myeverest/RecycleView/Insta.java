@@ -85,6 +85,7 @@ public class Insta extends Fragment {
         super.onActivityCreated(savedInstanceState);
         super.onCreate(savedInstanceState);
 
+        //zieht Nutzername aus Telefonspeicher
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         username = sharedPreferences.getString("username", "failed");
 
@@ -94,6 +95,7 @@ public class Insta extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //startet Uploadprozess für Bilder
                 choosePicture();
             }
         });
@@ -102,11 +104,13 @@ public class Insta extends Fragment {
     }
 
     public void refreshFeed() {
+        //Holt Metadaten Dokument aus der Collection images um zu ladende Bilder herauszufiltern
         DatabaseHandler.checkAnswerSubmission(new CallBack<DocumentSnapshot>() {
             @Override
             public void callback(DocumentSnapshot data) throws ExecutionException, InterruptedException {
                 int imageNumber = ((Long)data.get("uploadedImages")).intValue();
                 Query query;
+                //Lädt entweder alle Bilder die vorhanden sind oder die letzten 10, falls mehr als 10 vorhanden sind
                 if(imageNumber  >= 10) {
                     query = firestore.collection("images").whereGreaterThanOrEqualTo("number",imageNumber - 10);
                 }
@@ -114,6 +118,7 @@ public class Insta extends Fragment {
                     query = firestore.collection("images").whereGreaterThanOrEqualTo("number",0);
                 }
 
+                //Holt alle Bilder aus der Query
                 query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull @NotNull Task<QuerySnapshot> task) {
@@ -122,11 +127,14 @@ public class Insta extends Fragment {
                             List<Bitmap> bitlist = new ArrayList<>();
                             List<Integer> likelist = new ArrayList<>();
                             List<DocumentSnapshot> doclist = new ArrayList<>();
+
+                            //Fügt Bilddaten als Bitmap, Nutzernamen und Likes der jeweiligen Bilder in Listen ein
                             for(DocumentSnapshot doc : task.getResult()) {
                                 usernames.add(doc.get("username").toString());
                                 likelist.add(((Long) doc.get("likes")).intValue());
                                 Bitmap image = null;
                                 try {
+                                    //Lädt Bitmap herunter (Extra eigene Funktion um asynchronität zu gewährleisten um Main-Thread nicht zu blockieren)
                                     image = new DataHandler.myTask().execute(doc.get("url").toString()).get();
                                 } catch (ExecutionException e) {
                                     e.printStackTrace();
@@ -139,14 +147,18 @@ public class Insta extends Fragment {
 
                             }
 
+                            //Reihenfolge invertieren um aktuellste Bilder oben zu sehen
                             Collections.reverse(likelist);
                             Collections.reverse(usernames);
                             Collections.reverse(bitlist);
 
+                            //Befüllt eigenen Adapter mit den Listen und fügt sie der RecyclerView hinzu
                             MyAdapter customAdapter = new MyAdapter(likelist, usernames, bitlist);
                             RecyclerView recyclerList = getView().findViewById(R.id.recycleTest);
                             recyclerList.setLayoutManager(new LinearLayoutManager(getContext()));
                             recyclerList.setAdapter(customAdapter);
+
+                            //Fügt eigenen Listener zur Recyclerlist hinzu
                             recyclerList.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), recyclerList, new RecyclerItemClickListener.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(View view, int position) {
@@ -154,6 +166,8 @@ public class Insta extends Fragment {
 
                                 @Override
                                 public void onLongItemClick(View view, int position) {
+
+                                    //Aktualisiert likes in der DB und der Ansicht
                                     int invertedpos = likelist.size() - 1 - position;
                                     doclist.get(invertedpos).getReference().update("likes", FieldValue.increment(1));
                                     customAdapter.setLikesAtPosition(position, likelist.get(position)+1);
@@ -172,6 +186,8 @@ public class Insta extends Fragment {
     }
 
     private void choosePicture() {
+
+        //Startet Dateiexplorer um Bild auszuwählen
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -182,6 +198,7 @@ public class Insta extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        //Holt bei Erfolg das Bild aus dem Pfad und speichert es als Bitmap
         if(requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null){
             imageUri = data.getData();
             Bitmap bmp = null;
@@ -193,6 +210,7 @@ public class Insta extends Fragment {
                 e.printStackTrace();
             }
 
+            //Wandelt die Bitmap in Stream um und verändert größe bei gleichem Seitenverhältnis + komprimiert Bild unter Qualitätsverlust
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             float aspectRatio = bmp.getWidth() / (float) bmp.getHeight();
             int width = 700;
@@ -206,12 +224,15 @@ public class Insta extends Fragment {
 
     private void uploadPicture(byte[] image) {
         final View v = getView();
+        //Öffnet Anzeige für aktuellen Uploadstatus
         final ProgressDialog pd = new ProgressDialog(v.getContext());
         pd.setTitle("Bild wird hochgeladen...");
         pd.show();
         DatabaseHandler.checkAnswerSubmission(new CallBack<DocumentSnapshot>() {
             @Override
             public void callback(DocumentSnapshot data) throws ExecutionException, InterruptedException {
+
+                //Initiiert Uploadprozess des Bildes in Firebase Storage  unter dem Ordner images mit inkrementellen Dateinamen
                 int picNum = ((Long) data.get("uploadedImages")).intValue();
                 StorageReference riversRef = storageReference.child("images/" + picNum);
                 riversRef.putBytes(image)
@@ -225,9 +246,12 @@ public class Insta extends Fragment {
                                             @Override
                                             public void onComplete(@NonNull @NotNull Task<Uri> task) {
                                                 if(task.isSuccessful()) {
+
+                                                    //erstellt bei erfolgreichem Upload in Firebase Storage
                                                     Uri downloadUri = task.getResult();
                                                     DocumentReference imageRef = firestore.collection("images").document(String.valueOf(picNum));
                                                    data.getReference().update("uploadedImages", FieldValue.increment(1));
+                                                   //Erstellt Map für Firestore mit Bilddaten
                                                     Map<String, Object> imageMap = new HashMap<>();
                                                     imageMap.put("url", downloadUri.toString());
                                                     imageMap.put("username", username);
@@ -243,6 +267,7 @@ public class Insta extends Fragment {
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull @NotNull Exception e) {
+                                //Fehlermeldung bei Fehlschlag
                                 pd.dismiss();
                                 Toast.makeText(v.getContext(), "Fehlgeschlagen", Toast.LENGTH_LONG).show();
                             }
@@ -250,6 +275,7 @@ public class Insta extends Fragment {
                         .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onProgress(@NonNull @NotNull UploadTask.TaskSnapshot snapshot) {
+                                //Aktualisiert die Fortschrittsanzeige für den Upload
                                 double progressPercent = (100.00 * snapshot.getBytesTransferred() / snapshot.getTotalByteCount());
                                 pd.setMessage("Stand: " + (int) progressPercent + "%" );
                             }
@@ -257,9 +283,5 @@ public class Insta extends Fragment {
 
             }
         }, "images", "metadata");
-
-
-
-
     }
 }

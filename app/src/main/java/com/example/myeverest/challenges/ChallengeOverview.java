@@ -69,6 +69,7 @@ public class ChallengeOverview extends Fragment {
         joinButton = v.findViewById(R.id.joinChallengeButton);
         titleInput = v.findViewById(R.id.joinChallenge);
 
+        //zieht Nutzername aus Telefonspeicher
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         username = sharedPreferences.getString("username", "failed");
 
@@ -92,6 +93,7 @@ public class ChallengeOverview extends Fragment {
             }
         });
 
+        //lädt Challenges neu und aktualisiert die Ansicht
         refreshChallenges();
     }
 
@@ -105,12 +107,19 @@ public class ChallengeOverview extends Fragment {
                     DocumentSnapshot snapshot = task.getResult();
                     if(snapshot.exists()) {
                         List<String> list = (List) snapshot.get("users");
+
+                        //checkt ob Nutzer bereits der challenge beigetreten ist und gibt ggfs Fehlermeldung aus
+
                         if(list.contains(username)) {
                             titleInput.setError("Du bist bereits in dieser Challenge angemeldet");
                             return;
                         }
+
+                        //fügt user zur Challenge in DB hinzu und vice versa
                         challengeDoc.update("users", FieldValue.arrayUnion(username));
                         userDoc.update("challenges", FieldValue.arrayUnion(challengeTitle));
+
+                        //aktualisiert Ansicht
                         refreshChallenges();
                         titleInput.setText("");
                     }
@@ -123,12 +132,16 @@ public class ChallengeOverview extends Fragment {
         });
     }
 
+    //Holt Daten für die ListView und befüllt diese
     public void refreshChallenges() {
+
+        //Nutzt das Callback-Interface um asynchronität der Datenbankoberation "get" zu umgehen und direkt mit Werten arbeiten zu können
         checkAnswerSubmission(new CallBack<List<DocumentSnapshot>>() {
             @Override
             public void callback(List<DocumentSnapshot> data) {
                 String[] list = new String[data.size()];
 
+                //Unterscheidet ob Beschreibung vorhanden ist: Falls ja wird zusätzlich zum Titel die Beschreibung in die ListView eingefügt
                 for(int i = 0; i < data.size(); i++) {
                     if(!data.get(i).get("description").toString().isEmpty()) {
                         list[i] = new String("\nChallenge: " + data.get(i).get("title").toString() + " \n\nBeschreibung: " + data.get(i).get("description").toString() + "\n");
@@ -139,12 +152,16 @@ public class ChallengeOverview extends Fragment {
 
                     }
                 }
+
+                //Fügt liste in einen ArrayAdapter mit dem Layout festgelegt in R.layout.custom_listview_item
                 ArrayAdapter<Object> adapter = new ArrayAdapter<Object>(getContext(), R.layout.custom_listview_item, list);
                 listView.setAdapter(adapter);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         String type = data.get(position).get("type").toString();
+
+                        //wenn type angegeben wird die entsprechende Ansicht der Challenge mit den mitgegebenen Werten der Challengeart und dem Titel geöffnet
                         if(!type.isEmpty()) {
                             Fragment challengePage = new ChallengePage();
                             Bundle arguments = new Bundle();

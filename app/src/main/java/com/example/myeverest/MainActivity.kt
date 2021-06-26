@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
 
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
 
+        //Regelt wechsel zwischen Fragmenten über die Fußleiste
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when(item.itemId) {
 
@@ -56,50 +57,26 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.logout_bar -> {
                     switchFragments(Insta())
-                    /*firebaseAuth.signOut();
-                    val switchActivityIntent = Intent(this, Login::class.java)
-                    startActivity(switchActivityIntent);*/
                     true
                 }
                 else -> false
             }
         }
-
-        /*firestore.collection("users").whereEqualTo("email", "sgullmann@gmail.com").get().addOnSuccessListener { documents ->
-                for (document in documents) {
-                    Log.d("TAG", "${document.id} => ${document.data}")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.w("TAG", "Error getting documents: ", exception)
-            }*/
-
-        /*firestore.collection("users")
-            .whereEqualTo("email", "sgullmann@gmail.com")
-            .get()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    for (document in task.result) {
-                        Toast.makeText(this, document["nachname"].toString(), Toast.LENGTH_SHORT)
-                        Log.d("TAG", document["nachname"].toString())
-                    }
-                } else {
-                    Log.d("TAG", "Error getting documents: ", task.exception)
-                }
-            }*/
     }
 
+    //checkt ob der User nach neuladen angemeldet ist
     override fun onResume() {
         super.onResume()
         if(firebaseAuth.currentUser != null) {
             firebaseAuth.currentUser.reload();
             if(firebaseAuth.currentUser.isEmailVerified) {
-                //mailConfirmed.setText("Email bestätigt")
+
             }
 
         }
     }
 
+    //wechselt fragmentContainerView zu mitgegebenem fragment
     private fun switchFragments(fragment: Fragment) {
         val manager = supportFragmentManager
         val transaction = manager.beginTransaction()

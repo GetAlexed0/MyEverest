@@ -62,12 +62,16 @@ public class LocationMap extends Fragment {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             setLastKnownLocation();
+
+            //setzt Position zur DHBW wenn keine letzten Standortdaten vorhanden sind
             if(lastknown == null) {
                 lastknown = new Location("");
                 lastknown.setLatitude(49.4743816);
                 lastknown.setLongitude(8.5345478);
             }
             LatLng pos = new LatLng(lastknown.getLatitude(), lastknown.getLongitude());
+
+            //Fügt Marker Hinzu und fokussiert die Kamera auf letzten Standort/DHBW
             googleMap.addMarker(new MarkerOptions().position(pos).title("Aktueller Standort"));
             CameraPosition cameraPosition = new CameraPosition.Builder().target(pos).zoom(10).build();
             googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -80,6 +84,8 @@ public class LocationMap extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
+        //zieht Nutzername aus Telefonspeicher
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         username = sharedPreferences.getString("username", "failed");
         return inflater.inflate(R.layout.fragment_location_map, container, false);
@@ -88,6 +94,7 @@ public class LocationMap extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        //initialisiert Maps Fragment
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
@@ -96,8 +103,9 @@ public class LocationMap extends Fragment {
     }
 
     private void setDBMarkers(GoogleMap googleMap) {
-        checkAnswerSubmission(new CallBack<List<DocumentSnapshot>>() {
+        getLocationChallenges(new CallBack<List<DocumentSnapshot>>() {
             @Override
+            //Nutzt CallBack-Interface um Werte der Zielchallenges zu holen und jeweilige Positionen auf der Map zu setzen
             public void callback(List<DocumentSnapshot> data) {
                 for(int i = 0; i < data.size(); i++) {
                     GeoPoint geopoint = (GeoPoint) data.get(i).get("position");
@@ -109,8 +117,8 @@ public class LocationMap extends Fragment {
         }, username);
     }
 
-    private void checkAnswerSubmission(@NonNull CallBack<List<DocumentSnapshot>> finishedCallback, String username) {
-
+    private void getLocationChallenges(@NonNull CallBack<List<DocumentSnapshot>> finishedCallback, String username) {
+        //Erstellt zunächst leere Liste und fügt anschließend alle Snapshots der Challenges innerhalb der DB mit Challengetyp Zielchallenge in list
         List<DocumentSnapshot> list = new ArrayList<>();
         CollectionReference answerDatabase = firestore.collection("challenges");
         answerDatabase.whereArrayContains("users", username).whereEqualTo("type", "LOCATION").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -133,25 +141,27 @@ public class LocationMap extends Fragment {
     }
 
     private void setLastKnownLocation() {
+        //Holt Standortberechtigungen ein
         if ( Build.VERSION.SDK_INT >= 23){
             if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) !=
-                    PackageManager.PERMISSION_GRANTED  ){
+                    PackageManager.PERMISSION_GRANTED  )    {
                 requestPermissions(new String[]{
-                                android.Manifest.permission.ACCESS_FINE_LOCATION},
+                        android.Manifest.permission.ACCESS_FINE_LOCATION},
                         PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-
                 return;
             }
         }
 
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            System.out.println("Permissions fehlen");
-
+            //Test ob Standortberechtigungen erteilt wurden
             return;
         }
+        //erstellt LocationManager und zieht providers daraus
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         List<String> providers = locationManager.getProviders(true);
         Location bestLocation = null;
+
+        //iteriert alle provider durch und sucht sich den genauesten aus um dessen Position zu übernehmen, falls vorhanden
         for (String provider : providers) {
             Location l = locationManager.getLastKnownLocation(provider);
             if (l == null) {
@@ -160,7 +170,6 @@ public class LocationMap extends Fragment {
                 continue;
             }
             if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
-                // Found best last known location:
                 bestLocation = l;
             }
         }

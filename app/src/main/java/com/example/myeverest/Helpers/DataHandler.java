@@ -14,6 +14,7 @@ import java.net.URL;
 
 public class DataHandler extends Application {
 
+    //Lädt Bild per HTTP herunter und gibt fertiges Bild als Bitmap zurück
     public static class myTask extends AsyncTask<String, Void, Bitmap> {
 
         protected Bitmap doInBackground(String... params) {

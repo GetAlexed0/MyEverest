@@ -48,9 +48,11 @@ public class ChallengePage extends Fragment {
         super.onActivityCreated(savedInstanceState);
         View v = getView();
 
+        //zieht Nutzername aus Telefonspeicher
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         username = sharedPreferences.getString("username", "failed");
 
+        //zieht Challengeart und Titel aus dem Bundle im Fragment
         arguments = getArguments();
         type = arguments.getString("type");
         title = arguments.getString("title");
@@ -65,6 +67,8 @@ public class ChallengePage extends Fragment {
 
         background = v.findViewById(R.id.background);
 
+
+        //Ermöglicht Abschluss der challenge sofern points geladen wurde
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,12 +77,16 @@ public class ChallengePage extends Fragment {
                 }
             }
         });
+
+        //bricht challenge ab
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finishChallenge(true, 0);
             }
         });
+
+        //holt sich Daten der gewählten Challenge aus CallBack-Interface und gibt sie in das innere Fragment um challengeansicht zu öffnen
         DatabaseHandler.checkAnswerSubmission(new CallBack<DocumentSnapshot>() {
             @Override
             public void callback(DocumentSnapshot data) {
@@ -91,6 +99,7 @@ public class ChallengePage extends Fragment {
         }, "challenges", title);
     }
 
+    //befüllt Textfelder mit Challengedaten
     public void initializeFields(String challengeTitel, String challengeDesc, int points) {
         titleText.setText(challengeTitel);
         descText.setText("Challengebeschreibung: " + challengeDesc);
@@ -100,6 +109,7 @@ public class ChallengePage extends Fragment {
     public void fillInnerFragment(DocumentSnapshot doc) {
         Bundle arguments = new Bundle();
 
+        //Öffnet innerhalb der aktuellen Ansicht die zugehörige Ansicht zu den Challengetyp mit den Werten der aktuellen challenge
         if(type.equals("WALK")) {
             arguments.putInt("steps",((Long) doc.get("steps")).intValue());
             Fragment fragment = new Stepcounter();
@@ -117,6 +127,7 @@ public class ChallengePage extends Fragment {
         }
     }
 
+    //wechselt Hauptfragment oder Inneres Fragment zu mitgegebenem Fragment
     private void switchfragment (Fragment fragment, boolean inner) {
         final FragmentTransaction ft = getFragmentManager().beginTransaction();
         if(inner) {
@@ -133,8 +144,10 @@ public class ChallengePage extends Fragment {
         DocumentReference challengeDoc = firestore.collection("challenges").document(title);
 
         if(!canceled) {
+            //Erhöht Punkte des users um Belohnugspunkte der Challenge sofern challenge abgeschlossen wurde
             userDoc.update("points", FieldValue.increment(reward));
         }
+        //entfernt Challenge von user und umgekehrt
         userDoc.update("challenges", FieldValue.arrayRemove(title));
         challengeDoc.update("users", FieldValue.arrayRemove(username));
 

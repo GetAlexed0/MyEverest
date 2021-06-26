@@ -11,23 +11,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
 import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class DatabaseHandler {
 
     static FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
+    //Zieht sich das Firestore-Dokument mit dem Pfad collection/document aus der Datenbank und gibt es nach Abschluss des herunterladens
+    // als Callback in Form eines Interfaces zurück
     public static void checkAnswerSubmission(@NonNull CallBack<DocumentSnapshot> finishedCallback, String collection, String document) {
         DocumentReference answerDatabase = firestore.collection(collection).document(document);
         answerDatabase.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
