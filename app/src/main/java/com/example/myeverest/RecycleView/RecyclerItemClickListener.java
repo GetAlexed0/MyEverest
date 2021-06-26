@@ -28,6 +28,7 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
                 return true;
             }
 
+            //bei langem Drücken auf die View wird die Adapter Position zurückgegeben
             @Override
             public void onLongPress(MotionEvent e) {
                 View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
